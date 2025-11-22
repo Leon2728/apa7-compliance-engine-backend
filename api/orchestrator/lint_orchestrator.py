@@ -8,6 +8,7 @@ from typing import List
 from api.agents.base_agent import BaseAgent
 from api.agents.document_profile_agent import DocumentProfileAgent
 from api.agents.general_structure_agent import GeneralStructureAgent
+from api.agents.tables_figures_agent import TablesFiguresAgent
 from api.models.lint_models import LintRequest, LintResponse, LintSummary
 from api.rules_library import RuleLibrary
 from api.rules_models import Severity
@@ -32,6 +33,7 @@ class LintOrchestrator:
         # Agents that implement BaseAgent.run(...)
         self.agents: List[BaseAgent] = [
             GeneralStructureAgent(rule_library),
+                        TablesFiguresAgent(rule_library),
             # Later you'll add: GlobalFormatAgent, InTextCitationsAgent, etc.
         ]
 
