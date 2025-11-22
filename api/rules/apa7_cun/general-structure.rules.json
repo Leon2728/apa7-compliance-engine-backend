@@ -5,107 +5,153 @@
     {
       "ruleId": "CUN-GS-001",
       "title": "Presencia de resumen al inicio del trabajo",
-      "description": "Verifica que el documento incluya un resumen (abstract) al inicio del trabajo, después del título.",
-      "category": "Estructura General",
+      "description": "Todo trabajo académico extenso debe incluir un resumen al inicio del documento, antes de la introducción.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 2.9–2.10 (abstract).",
+      "localReference": "Guía APA CUN, apartado sobre el resumen del trabajo.",
       "severity": "warning",
-      "validationLogic": {
-        "type": "presence",
-        "target": "abstract",
-        "required": true
-      },
+      "checkType": "regex",
       "examples": {
-        "valid": "El documento contiene un resumen con palabras clave.",
-        "invalid": "El documento no tiene resumen después del título."
-      }
+        "good": "RESUMEN\nEste trabajo presenta...\n\nPalabras clave: aprendizaje, motivación, evaluación.\n\nINTRODUCCIÓN\n...",
+        "bad": "INTRODUCCIÓN\nEste trabajo presenta...\n\n[No hay sección de resumen previa]."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "RESUMEN",
+          "Resumen"
+        ],
+        "notes": "Buscar encabezados de sección que contengan la palabra 'RESUMEN' en las primeras páginas del documento. Si no existe, marcar advertencia."
+      },
+      "autoFixHint": "Incluye una sección de RESUMEN al inicio del trabajo, antes de la introducción, que sintetice objetivos, método y resultados principales en un solo párrafo."
     },
     {
       "ruleId": "CUN-GS-002",
       "title": "Palabras clave después del resumen",
-      "description": "Verifica que el documento incluya palabras clave (keywords) inmediatamente después del resumen.",
-      "category": "Estructura General",
+      "description": "Después del resumen deben incluirse de tres a cinco palabras clave que representen los temas principales del trabajo.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.9 (keywords).",
+      "localReference": "Guía APA CUN, indicaciones sobre palabras clave.",
       "severity": "warning",
-      "validationLogic": {
-        "type": "presence",
-        "target": "keywords",
-        "required": true,
-        "position": "after_abstract"
-      },
+      "checkType": "regex",
       "examples": {
-        "valid": "Palabras clave: educación, tecnología, innovación",
-        "invalid": "No hay palabras clave después del resumen."
-      }
+        "good": "RESUMEN\nEste trabajo presenta...\n\nPalabras clave: aprendizaje, motivación, evaluación.\n\nINTRODUCCIÓN\n...",
+        "bad": "RESUMEN\nEste trabajo presenta...\n\nINTRODUCCIÓN\n... [no se declaran palabras clave]."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "Palabras clave\\s*:",
+          "PALABRAS CLAVE\\s*:"
+        ],
+        "notes": "Buscar la expresión 'Palabras clave:' o 'PALABRAS CLAVE:' en las primeras páginas. Si existe resumen pero no se detectan palabras clave, generar advertencia."
+      },
+      "autoFixHint": "Incluye una línea de palabras clave inmediatamente después del resumen, por ejemplo: 'Palabras clave: aprendizaje, motivación, evaluación'."
     },
     {
       "ruleId": "CUN-GS-003",
       "title": "Presencia de sección de introducción",
-      "description": "Verifica que el documento incluya una sección de introducción claramente identificada.",
-      "category": "Estructura General",
+      "description": "El cuerpo del trabajo debe incluir una sección de introducción claramente identificada.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.11–2.27 (estructura del trabajo).",
+      "localReference": "Guía APA CUN, estructura general del documento.",
       "severity": "error",
-      "validationLogic": {
-        "type": "presence",
-        "target": "introduction_section",
-        "required": true
-      },
+      "checkType": "regex",
       "examples": {
-        "valid": "Introducción\\n El documento comienza con una introducción clara.",
-        "invalid": "El documento no contiene una sección de introducción."
-      }
+        "good": "INTRODUCCIÓN\nEn la actualidad...\n",
+        "bad": "En la actualidad...\n[No hay encabezado visible de 'Introducción']."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "^INTRODUCCI[ÓO]N\\s*$"
+        ],
+        "notes": "Buscar una línea en mayúsculas o destacada que contenga 'INTRODUCCIÓN' al inicio del cuerpo del trabajo."
+      },
+      "autoFixHint": "Incluye un encabezado de sección claramente identificado como 'INTRODUCCIÓN' antes del desarrollo del contenido principal."
     },
     {
       "ruleId": "CUN-GS-004",
       "title": "Presencia de sección de conclusiones",
-      "description": "Verifica que el documento incluya una sección de conclusiones al final del contenido principal.",
-      "category": "Estructura General",
+      "description": "El trabajo debe terminar con una sección de conclusiones que sintetice los aportes, hallazgos o aprendizajes principales.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.27–2.32 (discusión y cierre).",
+      "localReference": "Guía APA CUN, apartado sobre conclusiones.",
       "severity": "error",
-      "validationLogic": {
-        "type": "presence",
-        "target": "conclusion_section",
-        "required": true
-      },
+      "checkType": "regex",
       "examples": {
-        "valid": "Conclusiones\\n Se presentan las principales conclusiones del trabajo.",
-        "invalid": "El documento termina sin una sección de conclusiones."
-      }
+        "good": "CONCLUSIONES\nEn síntesis, los resultados muestran que...\n",
+        "bad": "En síntesis, los resultados muestran que...\n[No hay encabezado de sección 'Conclusiones']."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "^CONCLUSIONES\\s*$"
+        ],
+        "notes": "Buscar una sección final cuyo encabezado sea 'CONCLUSIONES'. Si no se encuentra, marcar error de estructura."
+      },
+      "autoFixHint": "Añade una sección final de CONCLUSIONES donde sintetices los aportes y aprendizajes del trabajo."
     },
     {
       "ruleId": "CUN-GS-005",
       "title": "Orden recomendado de secciones principales",
-      "description": "Verifica que las secciones principales del documento sigan el orden recomendado por APA 7.",
-      "category": "Estructura General",
+      "description": "Las secciones principales del trabajo deben seguir un orden lógico: portada, resumen, palabras clave, introducción, desarrollo, conclusiones, referencias y anexos (cuando haya).",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.3–2.15.",
+      "localReference": "Guía APA CUN, estructura de trabajos académicos.",
       "severity": "warning",
-      "validationLogic": {
-        "type": "section_order",
-        "expectedOrder": [
-          "Portada",
-          "Resumen",
-          "Palabras Clave",
-          "Introducción",
-          "Desarrollo",
-          "Conclusiones",
-          "Referencias"
-        ]
-      },
+      "checkType": "structural",
       "examples": {
-        "valid": "Las secciones están ordenadas: Título, Resumen, Introducción, Desarrollo, Conclusiones, Referencias.",
-        "invalid": "Las secciones están desordenadas: Referencias aparece antes que Conclusiones."
-      }
+        "good": "RESUMEN\n...\nPalabras clave: ...\n\nINTRODUCCIÓN\n...\n[desarrollo]\n\nCONCLUSIONES\n...\nREFERENCIAS\n...\nAPÉNDICE\n...",
+        "bad": "INTRODUCCIÓN\n...\nCONCLUSIONES\n...\nRESUMEN\n...\nREFERENCIAS\n..."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "RESUMEN",
+          "INTRODUCCIÓN",
+          "CONCLUSIONES",
+          "REFERENCIAS",
+          "APÉNDICE",
+          "APÉNDICES"
+        ],
+        "regex": [],
+        "notes": "Identificar las líneas de encabezado de secciones principales y comprobar que 'RESUMEN' (si existe) aparece antes que 'INTRODUCCIÓN'; que 'CONCLUSIONES' aparece antes que 'REFERENCIAS'; y que los apéndices (si los hay) van al final."
+      },
+      "autoFixHint": "Reorganiza el orden de las secciones para seguir la secuencia recomendada: resumen, palabras clave, introducción, desarrollo, conclusiones, referencias y apéndices."
     },
     {
       "ruleId": "CUN-GS-006",
       "title": "Encabezado adecuado de la sección de referencias",
-      "description": "Verifica que la sección de referencias use el encabezado correcto según APA 7.",
-      "category": "Estructura General",
+      "description": "La lista de referencias debe ubicarse en una sección claramente identificada, normalmente titulada 'REFERENCIAS'.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.12 y 9.43.",
+      "localReference": "Guía APA CUN, formato de la sección de referencias.",
       "severity": "warning",
-      "validationLogic": {
-        "type": "text_match",
-        "target": "references_header",
-        "pattern": "^Referencias$",
-        "caseSensitive": false
-      },
+      "checkType": "regex",
       "examples": {
-        "valid": "Referencias (encabezado de nivel 1 centrado)",
-        "invalid": "Bibliography o Works Cited en lugar de Referencias"
-      }
+        "good": "REFERENCIAS\nAgud Albesa, L., & Mora Carbonell, C. (2019)...",
+        "bad": "Bibliografía\nAgud Albesa, L., & Mora Carbonell, C. (2019)..."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "REFERENCIAS"
+        ],
+        "notes": "Verificar que exista al menos una línea que contenga 'REFERENCIAS' como encabezado de sección. Si solo aparece 'Bibliografía', sugerir ajuste según la guía CUN."
+      },
+      "autoFixHint": "Renombra el apartado final como 'REFERENCIAS' para que siga la terminología estándar APA y las indicaciones de la guía CUN."
     }
   ]
 }
