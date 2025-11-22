@@ -1,0 +1,188 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "TABLESFIGURES",
+  "rules": [
+    {
+      "ruleId": "CUN-TF-001",
+      "title": "Numeración consecutiva de tablas",
+      "description": "Cada tabla debe numerarse de forma consecutiva con números arábigos (Tabla 1, Tabla 2, etc.) en el orden en que aparecen en el documento.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre tablas",
+      "localReference": "Guía APA CUN sobre presentación de tablas",
+      "severity": "error",
+      "checkType": "regex",
+      "examples": {
+        "good": "Tabla 1\nCaracterísticas de la muestra\n...\nTabla 2\nResultados descriptivos\n...",
+        "bad": "TABLA UNO\nCaracterísticas de la muestra\n...\nTabla Dos\nResultados descriptivos\n..."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "^Tabla\\s+\\d+",
+          "^TABLA\\s+\\d+"
+        ],
+        "notes": "Verificar que las tablas se identifiquen con 'Tabla' seguido de un número arábigo y que no se repitan números ni haya saltos injustificados."
+      },
+      "autoFixHint": "Renombra las tablas usando números arábigos consecutivos (Tabla 1, Tabla 2, Tabla 3, etc.) según el orden de aparición."
+    },
+    {
+      "ruleId": "CUN-TF-002",
+      "title": "Título de la tabla encima del cuerpo de la tabla",
+      "description": "Cada tabla debe tener un título breve y claro, ubicado encima del cuerpo de la tabla, preferiblemente en cursiva según las recomendaciones APA.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre tablas",
+      "localReference": "Manual APA CUN, formato de títulos de tablas",
+      "severity": "warning",
+      "checkType": "structural",
+      "examples": {
+        "good": "Tabla 1\nCaracterísticas de la muestra\n[contenido de la tabla]",
+        "bad": "[contenido de la tabla]\nTabla 1. Características de la muestra"
+      },
+      "detectionHints": {
+        "scope": "block",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Al detectar una línea que comienza con 'Tabla n', comprobar que las líneas inmediatamente siguientes parezcan título y luego contenido tabular."
+      },
+      "autoFixHint": "Ubica el título de cada tabla inmediatamente después de su número de tabla y antes del cuerpo de la tabla."
+    },
+    {
+      "ruleId": "CUN-TF-003",
+      "title": "Numeración y título de figuras",
+      "description": "Cada figura debe numerarse de forma consecutiva (Figura 1, Figura 2, etc.) y acompañarse de un título o leyenda descriptiva.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre figuras",
+      "localReference": "Guía APA CUN sobre figuras e ilustraciones",
+      "severity": "error",
+      "checkType": "regex",
+      "examples": {
+        "good": "Figura 1\nDiagrama del modelo teórico\n[imagen]",
+        "bad": "[imagen]\nGráfico ejemplo"
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "^Figura\\s+\\d+",
+          "^FIGURA\\s+\\d+"
+        ],
+        "notes": "Verificar que las figuras estén identificadas por 'Figura' más un número arábigo y que exista al menos una línea adicional como título o leyenda."
+      },
+      "autoFixHint": "Numera las figuras como 'Figura 1', 'Figura 2', etc., y añade un título o leyenda clara inmediatamente después del número."
+    },
+    {
+      "ruleId": "CUN-TF-004",
+      "title": "Notas de tablas y figuras cuando hay aclaraciones",
+      "description": "Cuando se requieran aclaraciones sobre abreviaturas, símbolos, medidas o fuentes en tablas y figuras, deben incluirse notas explicativas al pie.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre notas en tablas y figuras",
+      "localReference": "Manual APA CUN, uso de notas en tablas y figuras",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "[contenido de la tabla]\nNota. Muestra de 120 estudiantes de primer semestre.",
+        "bad": "[contenido de la tabla con varios símbolos y abreviaturas] sin ninguna nota aclaratoria."
+      },
+      "detectionHints": {
+        "scope": "block",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Buscar la palabra 'Nota.' o 'Notas.' inmediatamente debajo de la tabla o figura. Si hay muchos símbolos o abreviaturas sin notas, emitir advertencia."
+      },
+      "autoFixHint": "Añade notas aclaratorias (Nota.) debajo de la tabla o figura para explicar abreviaturas, símbolos, tamaño de muestra u otros detalles relevantes."
+    },
+    {
+      "ruleId": "CUN-TF-005",
+      "title": "Citación de fuente en tablas y figuras no propias",
+      "description": "Cuando una tabla o figura sea reproducida o adaptada de otra fuente, debe indicarse explícitamente la fuente siguiendo el estilo APA.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, indicaciones sobre tablas y figuras adaptadas",
+      "localReference": "Guía APA CUN, uso de material de terceros",
+      "severity": "error",
+      "checkType": "semantic",
+      "examples": {
+        "good": "[tabla]\nNota. Adaptado de 'Título del artículo', por A. Apellido, año, Revista X, volumen(número), p. xx.",
+        "bad": "[tabla reproducida de otra fuente] sin ninguna mención a la fuente original."
+      },
+      "detectionHints": {
+        "scope": "block",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Cuando se detecten expresiones como 'Adaptado de' o 'Tomado de' junto a tablas/figuras, considerar correcto; si el documento incluye muchas tablas/figuras sin referencia, recomendar revisión manual."
+      },
+      "autoFixHint": "Incluye una nota debajo de la tabla o figura indicando claramente la fuente original y el tipo de uso (reproducido o adaptado) según APA."
+    },
+    {
+      "ruleId": "CUN-TF-006",
+      "title": "Coherencia de numeración entre texto y tablas/figuras",
+      "description": "Las tablas y figuras citadas en el texto deben corresponder con la numeración real de las tablas y figuras incluidas en el documento.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, recomendaciones sobre referencia cruzada a tablas y figuras",
+      "localReference": "Lineamientos CUN sobre coherencia de numeración",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Como se muestra en la Tabla 2, los resultados indican...\n[Posteriormente aparece una tabla rotulada como 'Tabla 2']",
+        "bad": "Como se muestra en la Tabla 3, los resultados indican...\n[En el documento solo existen tablas 1 y 2]"
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Extraer menciones a 'Tabla n' y 'Figura n' en el texto y comparar con las etiquetas reales de tablas y figuras detectadas."
+      },
+      "autoFixHint": "Ajusta las menciones a tablas y figuras en el texto para que coincidan con la numeración real y el orden en el documento."
+    },
+    {
+      "ruleId": "CUN-TF-007",
+      "title": "Estilo APA en líneas de tablas",
+      "description": "Las tablas deben usar únicamente las líneas horizontales esenciales (arriba, bajo encabezados y al final), sin líneas verticales ni cuadrículas completas.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre tablas (formato)",
+      "localReference": "Guía APA CUN sobre formato de tablas",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Tabla con una línea horizontal arriba, una bajo el encabezado y una al final; sin líneas verticales.",
+        "bad": "Tabla con todas las celdas separadas por líneas horizontales y verticales formando una rejilla completa."
+      },
+      "detectionHints": {
+        "scope": "block",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Usar layout.tables[*].borders para contar líneas horizontales internas y detectar líneas verticales. Marcar como incumplida cuando existan líneas verticales o demasiadas líneas horizontales internas."
+      },
+      "autoFixHint": "Simplifica el diseño de las tablas para que solo tengan las líneas horizontales esenciales y elimina las líneas verticales o cuadrículas completas."
+    },
+    {
+      "ruleId": "CUN-TF-008",
+      "title": "Tamaño mínimo y máximo de figuras",
+      "description": "Las figuras (imágenes, gráficos) deben tener un tamaño suficiente para ser legibles, sin exceder los márgenes de la página.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA 7, capítulo sobre figuras (tamaño y legibilidad)",
+      "localReference": "Guía APA CUN sobre tamaño de figuras",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Imagen de aproximadamente 8×6 cm que ocupa un ancho razonable de la página y se lee con claridad.",
+        "bad": "Miniatura de 2×1 cm ilegible o imagen tan grande que se sale de los márgenes de la página."
+      },
+      "detectionHints": {
+        "scope": "block",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Usar layout.images[*].width_cm y layout.images[*].height_cm para verificar tamaños mínimos y máximos razonables (por ejemplo, entre 4 y 17 cm de ancho, y altura suficiente para la legibilidad)."
+      },
+      "autoFixHint": "Ajusta el tamaño de las figuras para que sean legibles y se mantengan dentro de los márgenes del documento."
+    }
+  ]
+}
