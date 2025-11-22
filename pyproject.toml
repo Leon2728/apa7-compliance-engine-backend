@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apa7-compliance-engine-backend"
+version = "0.1.0"
+description = "Motor de cumplimiento APA7 basado en FastAPI"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Tu Nombre", email = "tu.email@example.com"}
+]
+requires-python = ">=3.9"
+keywords = ["apa7", "compliance", "fastapi", "backend"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: Spanish",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+    "pylint>=3.0",
+    "mypy>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/tu-usuario/apa7-compliance-engine-backend"
+Documentation = "https://github.com/tu-usuario/apa7-compliance-engine-backend#readme"
+Repository = "https://github.com/tu-usuario/apa7-compliance-engine-backend.git"
+Issues = "https://github.com/tu-usuario/apa7-compliance-engine-backend/issues"
+
+[tool.setuptools]
+packages = ["api"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directorios
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --strict-markers"
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "C0111",  # missing-docstring
+    "W0212",  # protected-access
+]
