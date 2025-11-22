@@ -6,6 +6,7 @@ from typing import List, Literal, Optional
 from pydantic import BaseModel, Field, ConfigDict
 
 from api.rules_models import Severity  # reutilizamos el enum de reglas
+from api.models.layout_models import DocumentLayout
 
 
 class LintContext(BaseModel):
@@ -28,6 +29,7 @@ class LintContext(BaseModel):
     profile_id: str = Field(
         default="apa7_cun",
         description="Perfil de reglas a usar (ej: 'apa7_cun')",
+            layout: Optional[DocumentLayout] = None
     )
 
 
