@@ -1,0 +1,16 @@
+# FastAPI y servidor
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.0
+
+# Utilidades
+python-dotenv>=1.0
+requests>=2.31.0
+
+# Desarrollo (opcional)
+pytest>=7.0
+pytest-cov>=4.0
+black>=23.0
+flake8>=6.0
+pylint>=3.0
+mypy>=1.0
