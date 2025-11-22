@@ -1,0 +1,111 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "GENERALSTRUCTURE",
+  "rules": [
+    {
+      "ruleId": "CUN-GS-001",
+      "title": "Presencia de resumen al inicio del trabajo",
+      "description": "Verifica que el documento incluya un resumen (abstract) al inicio del trabajo, después del título.",
+      "category": "Estructura General",
+      "severity": "warning",
+      "validationLogic": {
+        "type": "presence",
+        "target": "abstract",
+        "required": true
+      },
+      "examples": {
+        "valid": "El documento contiene un resumen con palabras clave.",
+        "invalid": "El documento no tiene resumen después del título."
+      }
+    },
+    {
+      "ruleId": "CUN-GS-002",
+      "title": "Palabras clave después del resumen",
+      "description": "Verifica que el documento incluya palabras clave (keywords) inmediatamente después del resumen.",
+      "category": "Estructura General",
+      "severity": "warning",
+      "validationLogic": {
+        "type": "presence",
+        "target": "keywords",
+        "required": true,
+        "position": "after_abstract"
+      },
+      "examples": {
+        "valid": "Palabras clave: educación, tecnología, innovación",
+        "invalid": "No hay palabras clave después del resumen."
+      }
+    },
+    {
+      "ruleId": "CUN-GS-003",
+      "title": "Presencia de sección de introducción",
+      "description": "Verifica que el documento incluya una sección de introducción claramente identificada.",
+      "category": "Estructura General",
+      "severity": "error",
+      "validationLogic": {
+        "type": "presence",
+        "target": "introduction_section",
+        "required": true
+      },
+      "examples": {
+        "valid": "Introducción\\n El documento comienza con una introducción clara.",
+        "invalid": "El documento no contiene una sección de introducción."
+      }
+    },
+    {
+      "ruleId": "CUN-GS-004",
+      "title": "Presencia de sección de conclusiones",
+      "description": "Verifica que el documento incluya una sección de conclusiones al final del contenido principal.",
+      "category": "Estructura General",
+      "severity": "error",
+      "validationLogic": {
+        "type": "presence",
+        "target": "conclusion_section",
+        "required": true
+      },
+      "examples": {
+        "valid": "Conclusiones\\n Se presentan las principales conclusiones del trabajo.",
+        "invalid": "El documento termina sin una sección de conclusiones."
+      }
+    },
+    {
+      "ruleId": "CUN-GS-005",
+      "title": "Orden recomendado de secciones principales",
+      "description": "Verifica que las secciones principales del documento sigan el orden recomendado por APA 7.",
+      "category": "Estructura General",
+      "severity": "warning",
+      "validationLogic": {
+        "type": "section_order",
+        "expectedOrder": [
+          "Portada",
+          "Resumen",
+          "Palabras Clave",
+          "Introducción",
+          "Desarrollo",
+          "Conclusiones",
+          "Referencias"
+        ]
+      },
+      "examples": {
+        "valid": "Las secciones están ordenadas: Título, Resumen, Introducción, Desarrollo, Conclusiones, Referencias.",
+        "invalid": "Las secciones están desordenadas: Referencias aparece antes que Conclusiones."
+      }
+    },
+    {
+      "ruleId": "CUN-GS-006",
+      "title": "Encabezado adecuado de la sección de referencias",
+      "description": "Verifica que la sección de referencias use el encabezado correcto según APA 7.",
+      "category": "Estructura General",
+      "severity": "warning",
+      "validationLogic": {
+        "type": "text_match",
+        "target": "references_header",
+        "pattern": "^Referencias$",
+        "caseSensitive": false
+      },
+      "examples": {
+        "valid": "Referencias (encabezado de nivel 1 centrado)",
+        "invalid": "Bibliography o Works Cited en lugar de Referencias"
+      }
+    }
+  ]
+}
