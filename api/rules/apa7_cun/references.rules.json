@@ -1,0 +1,160 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "REFERENCES",
+  "rules": [
+    {
+      "ruleId": "CUN-REF-001",
+      "title": "Orden alfabético de la lista de referencias",
+      "description": "Las referencias deben ordenarse alfabéticamente por el apellido del primer autor o, en su defecto, por el nombre de la entidad autora.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the American Psychological Association (7th ed.), secc. 9.44–9.48.",
+      "localReference": "Guía APA CUN, ordenamiento de la lista de referencias.",
+      "severity": "error",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Agud Albesa, L., & Mora Carbonell, C. (2019)...\nHernández, R., Fernández, C., & Baptista, P. (2020)...\nVeerarajan, T. (2008)...",
+        "bad": "Hernández, R., Fernández, C., & Baptista, P. (2020)...\nAgud Albesa, L., & Mora Carbonell, C. (2019)...\nVeerarajan, T. (2008)..."
+      },
+      "detectionHints": {
+        "scope": "section",
+        "sectionTargets": [
+          "REFERENCIAS",
+          "BIBLIOGRAFÍA"
+        ],
+        "regex": [],
+        "notes": "Extraer la primera palabra de cada entrada (apellido o entidad) y comprobar que la secuencia global esté en orden alfabético ascendente."
+      },
+      "autoFixHint": "Reordena la lista de referencias alfabéticamente por el apellido del primer autor o por el nombre de la entidad responsable de la obra."
+    },
+    {
+      "ruleId": "CUN-REF-002",
+      "title": "Formato básico de entrada de libro",
+      "description": "Las referencias a libros deben incluir autor(es), año entre paréntesis, título del libro en cursiva y editorial.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 10.2 (ejemplos de libros).",
+      "localReference": "Guía APA CUN, apartado sobre referencias de libros.",
+      "severity": "warning",
+      "checkType": "regex",
+      "examples": {
+        "good": "Veerarajan, T. (2008). Probabilidad y estadística. McGraw-Hill.",
+        "bad": "Veerarajan, T. Probabilidad y estadística, McGraw-Hill, 2008."
+      },
+      "detectionHints": {
+        "scope": "section",
+        "sectionTargets": [
+          "REFERENCIAS",
+          "BIBLIOGRAFÍA"
+        ],
+        "regex": [
+          "^[A-ZÁÉÍÓÚÑ][^\\n]+\\(\\d{4}\\)\\.[^\\n]+\\.[^\\n]+\\.$"
+        ],
+        "notes": "Comprobar patrón general: Apellido, Inicial. (año). Título de la obra. Editorial. Las cursivas no se detectan en texto plano, pero se puede verificar la presencia del año entre paréntesis y el punto después del título."
+      },
+      "autoFixHint": "Ajusta las referencias de libros al formato: Apellido, Inicial. (año). Título del libro. Editorial."
+    },
+    {
+      "ruleId": "CUN-REF-003",
+      "title": "Formato básico de artículo de revista",
+      "description": "Las referencias a artículos de revista deben incluir autor(es), año, título del artículo, título de la revista en cursiva, volumen, número (si aplica) y rango de páginas.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 10.1 (ejemplos de artículos de revista).",
+      "localReference": "Guía APA CUN, apartado sobre referencias de artículos de revista.",
+      "severity": "warning",
+      "checkType": "regex",
+      "examples": {
+        "good": "Rivas-Rebaque, B., & Gértrudix-Barrio, M. (2021). Título del artículo. Revista Ejemplo, 15(2), 45–60.",
+        "bad": "Rivas-Rebaque, B., & Gértrudix-Barrio, M. Título del artículo, Revista Ejemplo, 2021."
+      },
+      "detectionHints": {
+        "scope": "section",
+        "sectionTargets": [
+          "REFERENCIAS",
+          "BIBLIOGRAFÍA"
+        ],
+        "regex": [
+          "^[A-ZÁÉÍÓÚÑ][^\\n]+\\(\\d{4}\\)\\.[^\\n]+\\.[^\\n]+,\\s*\\d+\\([^\\n]*\\),\\s*\\d+\\s*[–-]\\s*\\d+\\.$"
+        ],
+        "notes": "Verificar la presencia de volumen y páginas en formato volumen(número), pp–pp. Puede requerir revisión manual cuando los datos están incompletos."
+      },
+      "autoFixHint": "Incluye en las referencias de artículos: autor(es), año, título del artículo, título de la revista, volumen, número y páginas, siguiendo el formato APA 7."
+    },
+    {
+      "ruleId": "CUN-REF-004",
+      "title": "Inclusión de DOI o URL en recursos electrónicos",
+      "description": "Cuando esté disponible, las obras consultadas en línea deben incluir DOI o URL estable en la referencia.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 9.34–9.36, 10.1–10.16 (uso de DOIs y URLs).",
+      "localReference": "Guía APA CUN, recursos electrónicos y acceso en línea.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Hernández, R., Fernández, C., & Baptista, P. (2020). Título del libro. McGraw-Hill. https://doi.org/10.xxxx/xxxx",
+        "bad": "Hernández, R., Fernández, C., & Baptista, P. (2020). Título del libro. McGraw-Hill."
+      },
+      "detectionHints": {
+        "scope": "section",
+        "sectionTargets": [
+          "REFERENCIAS",
+          "BIBLIOGRAFÍA"
+        ],
+        "regex": [],
+        "notes": "Detectar referencias que parezcan recursos electrónicos (por ejemplo, acceso a revistas en línea, bases de datos) y comprobar si contienen 'http', 'https' o 'doi.org'. Marcar como advertencia las que previsiblemente requieran DOI/URL y no lo tengan."
+      },
+      "autoFixHint": "Añade el DOI o una URL estable para las obras consultadas en línea, siguiendo el formato recomendado por APA 7."
+    },
+    {
+      "ruleId": "CUN-REF-005",
+      "title": "Correspondencia entre referencias y citas en el texto",
+      "description": "Cada obra incluida en la lista de referencias debe aparecer citada al menos una vez en el cuerpo del trabajo.",
+      "source": "APA7",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 8.4.",
+      "localReference": "Guía APA CUN, relación entre citas y referencias.",
+      "severity": "error",
+      "checkType": "semantic",
+      "examples": {
+        "good": "En el texto: (Agud Albesa & Mora Carbonell, 2019)...\nEn Referencias: Agud Albesa, L., & Mora Carbonell, C. (2019). ...",
+        "bad": "En Referencias: Agud Albesa, L., & Mora Carbonell, C. (2019)...\n[En el texto nunca se cita esta obra]."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "REFERENCIAS",
+          "BIBLIOGRAFÍA"
+        ],
+        "regex": [],
+        "notes": "Comparar el conjunto de apellidos y años de la lista de referencias con las citas detectadas en el texto (patrones autor, año). Marcar como error las referencias sin ninguna cita asociada."
+      },
+      "autoFixHint": "Elimina de la lista de referencias las obras que no utilizas o incorpora citas en el texto que hagan referencia a ellas."
+    },
+    {
+      "ruleId": "CUN-REF-006",
+      "title": "Encabezado adecuado de la sección de referencias",
+      "description": "La lista de referencias debe presentarse bajo un encabezado claro, generalmente 'Referencias' o 'Lista de referencias', centrado y con formato de título APA.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.12 y 9.43.",
+      "localReference": "Guía APA CUN, formato de apartados finales.",
+      "severity": "warning",
+      "checkType": "regex",
+      "examples": {
+        "good": "REFERENCIAS\nAgud Albesa, L., & Mora Carbonell, C. (2019)...",
+        "bad": "Bibliografía final\nAgud Albesa, L., & Mora Carbonell, C. (2019)..."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "REFERENCIAS",
+          "Lista de referencias"
+        ],
+        "notes": "Verificar que exista un encabezado claramente reconocible para la sección de referencias. En contextos hispanohablantes se admite 'Referencias' como equivalente estándar."
+      },
+      "autoFixHint": "Utiliza un encabezado claro y consistente para la sección de referencias, preferiblemente 'Referencias', siguiendo el formato de títulos establecido por APA 7 y la guía CUN."
+    }
+  ]
+}
