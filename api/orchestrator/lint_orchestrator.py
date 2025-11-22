@@ -9,6 +9,8 @@ from api.agents.base_agent import BaseAgent
 from api.agents.document_profile_agent import DocumentProfileAgent
 from api.agents.general_structure_agent import GeneralStructureAgent
 from api.agents.tables_figures_agent import TablesFiguresAgent
+from api.agents.in_text_citations_agent import InTextCitationsAgent
+from api.agents.references_agent import ReferencesAgent
 from api.models.lint_models import LintRequest, LintResponse, LintSummary
 from api.rules_library import RuleLibrary
 from api.rules_models import Severity
@@ -33,52 +35,86 @@ class LintOrchestrator:
         # Agents that implement BaseAgent.run(...)
         self.agents: List[BaseAgent] = [
             GeneralStructureAgent(rule_library),
-                        TablesFiguresAgent(rule_library),
-            # Later you'll add: GlobalFormatAgent, InTextCitationsAgent, etc.
+            TablesFiguresAgent(rule_library),
+            InTextCitationsAgent(rule_library),
+            ReferencesAgent(rule_library),
         ]
 
-    async def run(self, request: LintRequest) -> LintResponse:
-        start = perf_counter()
+    async def lint_document(self, request: LintRequest) -> LintResponse:
+        start_time = perf_counter()
+        text = request.text
 
-        # 1) Infer document profile
-        profile, profile_findings = await self.document_profile_agent.analyze(
-            document_text=request.document_text,
-            context=request.context,
-        )
+        # 1. Analyze Profile (sequential)
+        profile, profile_findings = await self.document_profile_agent.run(text)
 
-        # 2) Run all agents in parallel
-        tasks = [
-            agent.run(
-                document_text=request.document_text,
-                context=request.context,
-                profile=profile,
+        # Context for other agents
+        context = request.context  # has page_count, etc.
+
+        # 2. Run other agents in parallel
+        # Gather tasks
+        tasks = []
+        for agent in self.agents:
+            tasks.append(agent.run(text, context, profile))
+
+        results_list = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # 3. Aggregate findings
+        all_findings = list(profile_findings)
+
+        for res in results_list:
+            if isinstance(res, list):
+                all_findings.extend(res)
+            else:
+                # If an exception occurred, we might log it or add a system finding
+                # For now, we just print/ignore
+                print(f"Agent error: {res}")
+
+        # Calculate stats
+        error_count = sum(1 for f in all_findings if f.severity == Severity.ERROR)
+        warning_count = sum(1 for f in all_findings if f.severity == Severity.WARNING)
+        info_count = sum(1 for f in all_findings if f.severity == Severity.INFO)
+        # hint/typographical? APA7 usually maps to these 3.
+
+        # Sort findings by location (if possible)
+        # A simple sort key: (page or 0, line or 0, start_offset or 0)
+        def sort_key(f):
+            loc = f.location
+            return (
+                loc.page if loc and loc.page else 0,
+                loc.line if loc and loc.line else 0,
+                loc.start_offset if loc and loc.start_offset else 0,
             )
-            for agent in self.agents
-        ]
-        results = await asyncio.gather(*tasks)
 
-        agent_findings = [f for sublist in results for f in sublist]
-        all_findings = profile_findings + agent_findings
+        all_findings.sort(key=sort_key)
 
-        # 3) Summary
+        duration = perf_counter() - start_time
+
         summary = LintSummary(
-            error_count=sum(1 for f in all_findings if f.severity == Severity.error),
-            warning_count=sum(1 for f in all_findings if f.severity == Severity.warning),
-            suggestion_count=sum(
-                1 for f in all_findings if f.severity == Severity.suggestion
-            ),
+            total_findings=len(all_findings),
+            errors=error_count,
+            warnings=warning_count,
+            infos=info_count,
+            compliance_score=self._calculate_score(error_count, warning_count),
+            processing_time_ms=int(duration * 1000),
+            timestamp=datetime.utcnow().isoformat(),
         )
 
-        elapsed_ms = (perf_counter() - start) * 1000.0
-
-        response = LintResponse(
-            success=True,
-            findings=all_findings,
+        return LintResponse(
+            request_id=request.request_id,
             summary=summary,
-            agents_run=["DOCUMENTPROFILE"] + [a.agent_id for a in self.agents],
-            elapsed_ms=elapsed_ms,
             profile=profile,
-            timestamp=datetime.utcnow(),
+            findings=all_findings,
         )
 
-        return response
+    def _calculate_score(self, errors: int, warnings: int) -> float:
+        """
+        Simple scoring logic:
+        Start at 100.
+        Each error -5
+        Each warning -2
+        Min 0.
+        """
+        score = 100.0
+        score -= errors * 5.0
+        score -= warnings * 2.0
+        return max(0.0, score)
