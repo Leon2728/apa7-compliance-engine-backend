@@ -18,17 +18,18 @@ class DocumentProfileAgent:
     Agente DOCUMENTPROFILE.
 
     Su función principal es:
-      - Inferir un perfil básico del documento:
-          * idioma predominante
-          * tipo (si viene en el contexto)
-          * institución, estilo
-      - Generar hallazgos relacionados con el perfil
-        (por ejemplo: discrepancia de idioma declarado vs detectado).
+    - Inferir un perfil básico del documento:
+        * idioma predominante
+        * tipo (si viene en el contexto)
+        * institución, estilo
+        * tipo de documento y roles (autor, audiencia, dirección)
+    - Generar hallazgos relacionados con el perfil
+      (por ejemplo: discrepancia de idioma declarado vs detectado).
 
     Este agente es especial:
-      - NO sigue el contrato BaseAgent.run(), porque su salida incluye
-        un DocumentProfile explícito.
-      - Por eso expone el método `analyze(...) -> (profile, findings)`.
+    - NO sigue el contrato BaseAgent.run(), porque su salida incluye
+      un DocumentProfile explícito.
+    - Por eso expone el método `analyze(...) -> (profile, findings)`.
     """
 
     agent_id = "DOCUMENTPROFILE"
@@ -44,8 +45,8 @@ class DocumentProfileAgent:
         """
         Analiza el documento para inferir un perfil básico y
         devuelve:
-          - DocumentProfile inferido
-          - Lista de Finding relacionados con el perfil
+        - DocumentProfile inferido
+        - Lista de Finding relacionados con el perfil
         """
         text_sample = document_text[:5000] if document_text else ""
 
@@ -66,7 +67,6 @@ class DocumentProfileAgent:
                 flags=re.IGNORECASE,
             )
         )
-
         if es_tokens > en_tokens:
             inferred_lang = "es"
         elif en_tokens > es_tokens:
@@ -94,6 +94,61 @@ class DocumentProfileAgent:
         if inferred_lang == context.language:
             confidence += 0.1
 
+        # -------------------------------
+        # Detección de tipo de documento y roles
+        # -------------------------------
+        document_type = "otro"
+        author_role = "otro"
+        audience_role = "docente"  # default común en contexto académico
+        direction = "otro"
+
+        # Detectar ACA (Actividad de Construcción Aplicada)
+        is_aca = bool(
+            re.search(
+                r"\b(Actividad\s+de\s+Construcción\s+Aplicada|ACA)\b",
+                text_sample,
+                flags=re.IGNORECASE,
+            )
+        )
+
+        # Detectar indicios de estudiantes como autores
+        has_student_indicators = bool(
+            re.search(
+                r"\b(Estudiante|Estudiantes|Integrantes?|Autores?)\s*:",
+                text_sample,
+                flags=re.IGNORECASE,
+            )
+        )
+
+        # Detectar indicios de equipo (múltiples autores)
+        has_team_indicators = bool(
+            re.search(
+                r"\b(Integrantes|Equipo|Grupo|Estudiantes)\b",
+                text_sample,
+                flags=re.IGNORECASE,
+            )
+        )
+
+        # Detectar docente como destinatario
+        has_teacher_recipient = bool(
+            re.search(
+                r"\b(Docente|Profesor|Profesora|Tutor|Tutora)\s*:",
+                text_sample,
+                flags=re.IGNORECASE,
+            )
+        )
+
+        # Lógica de clasificación: si es ACA con estudiantes → docente
+        if is_aca and has_student_indicators and has_teacher_recipient:
+            document_type = "actividad_curso"
+            author_role = "estudiantes_equipo" if has_team_indicators else "estudiante_individual"
+            audience_role = "docente"
+            direction = "estudiantes_a_docente" if has_team_indicators else "estudiante_a_docente"
+        elif is_aca:
+            # ACA detectada pero sin indicadores claros de roles
+            document_type = "actividad_curso"
+            # Dejamos roles en valores por defecto/otro
+
         profile = DocumentProfile(
             inferred_type=inferred_type,
             language=inferred_lang,
@@ -101,6 +156,10 @@ class DocumentProfileAgent:
             institution=context.institution,
             confidence=min(confidence, 1.0),
             raw_tags=raw_tags,
+            document_type=document_type,
+            author_role=author_role,
+            audience_role=audience_role,
+            direction=direction,
         )
 
         findings: List[Finding] = []
