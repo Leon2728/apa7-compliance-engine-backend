@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import List, Literal, Optional
+from typing import Any, List, Literal, Optional
 
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -113,6 +113,7 @@ class LintRequest(BaseModel):
         default_factory=LintContext, description="Contexto opcional de linting"
     )
     options: Optional[LintOptions] = None
+    metadata: dict[str, Any] | None = None
 
 
 class LintResponse(BaseModel):
