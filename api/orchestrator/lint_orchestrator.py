@@ -13,6 +13,8 @@ from api.agents.general_structure_agent import GeneralStructureAgent
 from api.agents.tables_figures_agent import TablesFiguresAgent
 from api.agents.in_text_citations_agent import InTextCitationsAgent
 from api.agents.references_agent import ReferencesAgent
+from api.agents.metadata_consistency_agent import MetadataConsistencyAgent
+
 from api.models.lint_models import LintRequest, LintResponse, LintSummary
 from api.rules_library import RuleLibrary
 from api.rules_models import Severity
@@ -42,6 +44,7 @@ class LintOrchestrator:
             ReferencesAgent(rule_library),
                         MathEquationsAgent(rule_library),
                         ScientificDesignAgent(rule_library),
+                        MetadataConsistencyAgent(rule_library),
         ]
 
     async def lint_document(self, request: LintRequest) -> LintResponse:
