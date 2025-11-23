@@ -11,7 +11,7 @@ from api.models.lint_models import (
     FindingLocation,
 )
 from api.rules_library import RuleLibrary
-from api.rules_models import Rule
+from api.rules_models import Rule, RuleSource
 
 
 RE_SECTION_HEADER = re.compile(r"^[A-ZÁÉÍÓÚÑ ]{3,}$")
@@ -54,6 +54,7 @@ class ScientificDesignAgent(BaseAgent):
             return findings
 
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+                is_international = context.profile_variant == "apa7_international"
         text = document_text or ""
         lines = _normalize_lines(text)
         upper_lines = [ln.upper() for ln in lines]
@@ -61,6 +62,8 @@ class ScientificDesignAgent(BaseAgent):
         section_indices = self._detect_section_headers(upper_lines)
 
         for rule in rules:
+                        if is_international and rule.source == RuleSource.LOCAL:
+                                            continue
             if rule.rule_id == "CUN-SD-001":
                 findings.extend(
                     self._check_sd_001_problem_and_objectives(
