@@ -11,7 +11,7 @@ from api.models.lint_models import (
     FindingLocation,
 )
 from api.rules_library import RuleLibrary
-from api.rules_models import Rule
+from api.rules_models import Rule, RuleSource
 
 
 EQUATION_LINE_PATTERN = re.compile(
@@ -70,8 +70,11 @@ class MathEquationsAgent(BaseAgent):
         equation_ref_set = {n for n in equation_refs}
 
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+                is_international = context.profile_variant == "apa7_international"
 
         for rule in rules:
+                        if is_international and rule.source == RuleSource.LOCAL:
+                                            continue
             if rule.rule_id == "CUN-ME-001":
                 findings.extend(
                     self._check_me_001_sequential_numbering(
