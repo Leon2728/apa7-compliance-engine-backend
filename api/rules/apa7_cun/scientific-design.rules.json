@@ -1,78 +1,177 @@
 {
-  "agent_id": "SCIENTIFICDESIGN",
-  "agent_name": "Scientific Design Validator",
+  "profileId": "apa7_cun",
+  "agentId": "SCIENTIFICDESIGN",
   "rules": [
     {
-      "rule_id": "CUN-SD-001",
-      "description": "El documento de investigación debe indicar claramente el problema de investigación y/o los objetivos del estudio.",
-      "severity": "error",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Incluya una sección que establezca el problema de investigación u objetivo general del estudio. Por ejemplo: 'PROBLEMA DE INVESTIGACIÓN' u 'OBJETIVO GENERAL'."
-    },
-    {
-      "rule_id": "CUN-SD-002",
-      "description": "Los trabajos de investigación deben incluir una sección de 'Método' o 'Metodología' que describa cómo se realizó el estudio.",
-      "severity": "error",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Agregue una sección titulada 'MÉTODO' o 'METODOLOGÍA' donde explique el diseño del estudio, participantes, instrumentos y procedimientos."
-    },
-    {
-      "rule_id": "CUN-SD-003",
-      "description": "Los informes científicos deben presentar secciones de 'Resultados' y 'Discusión' (o 'Análisis y Discusión').",
-      "severity": "error",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Incluya secciones separadas tituladas 'RESULTADOS' y 'DISCUSIÓN' (o 'ANÁLISIS Y DISCUSIÓN'). En Resultados presente los hallazgos; en Discusión, interprete su significado."
-    },
-    {
-      "rule_id": "CUN-SD-004",
-      "description": "La estructura del documento debe seguir un orden lógico tipo IMRyD: Introducción/Marco teórico → Método → Resultados → Discusión → Conclusiones.",
+      "ruleId": "CUN-SD-001",
+      "title": "Definición del problema de investigación y objetivos",
+      "description": "En trabajos de investigación se debe enunciar claramente el problema de investigación y/o los objetivos del estudio.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 3.3–3.4 (problem statement and objectives).",
+      "localReference": "Guías CUN para trabajos de investigación, sección sobre planteamiento del problema y objetivos.",
       "severity": "warning",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Reorganice las secciones principales en el orden convencional: Introducción, Marco teórico, Método, Resultados, Discusión, Conclusiones."
+      "checkType": "regex",
+      "examples": {
+        "good": "1. Planteamiento del problema\nEl problema de investigación se centra en...\n\n1.1 Objetivo general\nDeterminar...\n\n1.2 Objetivos específicos\nAnalizar...",
+        "bad": "Introducción\nEn la actualidad el tema X es importante, pero no se formulan objetivos ni se enuncia el problema de investigación."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "INTRODUCCIÓN",
+          "PLANTEAMIENTO DEL PROBLEMA",
+          "OBJETIVOS"
+        ],
+        "regex": [
+          "PROBLEMA DE INVESTIGACI[\u00d3O]N",
+          "OBJETIVO GENERAL",
+          "OBJETIVOS ESPEC[\u00cdI]FICOS"
+        ],
+        "notes": "Buscar encabezados o frases que contengan 'problema de investigación', 'objetivo general' u 'objetivos específicos'. Si no aparecen en las primeras secciones del documento, generar advertencia."
+      },
+      "autoFixHint": "Incluye un breve planteamiento del problema de investigación y formula al menos un objetivo general claro (y, si corresponde, objetivos específicos)."
     },
     {
-      "rule_id": "CUN-SD-005",
-      "description": "El documento debe establecer objetivos al inicio y presentar conclusiones que respondan a dichos objetivos.",
+      "ruleId": "CUN-SD-002",
+      "title": "Presencia de sección de método o metodología",
+      "description": "Los trabajos empíricos deben incluir una sección claramente identificada de 'Método' o 'Metodología' donde se describan participantes, instrumentos y procedimiento.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 3.7 (Method).",
+      "localReference": "Guías CUN de investigación, apartado sobre descripción del método.",
+      "severity": "error",
+      "checkType": "regex",
+      "examples": {
+        "good": "MÉTODO\nParticipantes...\nInstrumentos...\nProcedimiento...",
+        "bad": "Se recogieron datos, pero no existe ninguna sección marcada como 'Método' o 'Metodología'."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "MÉTODO",
+          "METODOLOGÍA"
+        ],
+        "regex": [
+          "^M[ÉE]TODO\\s*$",
+          "^METODOLOG[ÍI]A\\s*$"
+        ],
+        "notes": "Buscar encabezados en mayúsculas 'MÉTODO' o 'METODOLOGÍA' como secciones principales del informe."
+      },
+      "autoFixHint": "Agrega una sección de 'MÉTODO' o 'METODOLOGÍA' donde expliques participantes, instrumentos y procedimiento de manera clara."
+    },
+    {
+      "ruleId": "CUN-SD-003",
+      "title": "Presencia de secciones de resultados y discusión",
+      "description": "Los informes de investigación deben presentar una sección de resultados y otra de discusión (o análisis y discusión), diferenciando la presentación de datos de su interpretación.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 3.8–3.9 (Results, Discussion).",
+      "localReference": "Guías CUN, estructura de informes de investigación.",
       "severity": "warning",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Asegúrese de que el documento incluya una sección de 'OBJETIVOS' (general y específicos) y una sección de 'CONCLUSIONES' que retome esos objetivos."
+      "checkType": "structural",
+      "examples": {
+        "good": "RESULTADOS\nSe encontró que...\n\nDISCUSIÓN\nLos resultados muestran que...",
+        "bad": "Análisis de los datos y conclusiones se presentan en un único bloque sin distinguir resultados de discusión."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "RESULTADOS",
+          "DISCUSIÓN",
+          "ANÁLISIS Y DISCUSIÓN"
+        ],
+        "regex": [],
+        "notes": "Verificar que existan encabezados claros para 'RESULTADOS' y 'DISCUSIÓN' o una variante equivalente como 'ANÁLISIS Y DISCUSIÓN'."
+      },
+      "autoFixHint": "Separa la presentación de resultados de su interpretación, creando secciones diferenciadas de 'RESULTADOS' y 'DISCUSIÓN'."
     },
     {
-      "rule_id": "CUN-SD-006",
-      "description": "Se recomienda incluir una sección sobre limitaciones del estudio para reconocer alcances y restricciones de la investigación.",
+      "ruleId": "CUN-SD-004",
+      "title": "Orden razonable de secciones IMRyD",
+      "description": "La secuencia de secciones principales de un informe de investigación debería seguir un orden lógico similar a IMRyD: introducción/marco teórico → método → resultados → discusión → conclusiones.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., cap. 3 (Journal Article Reporting Standards).",
+      "localReference": "Guías CUN para estructura de artículos e informes de investigación.",
+      "severity": "warning",
+      "checkType": "structural",
+      "examples": {
+        "good": "INTRODUCCIÓN\n...\nMARCO TEÓRICO\n...\nMÉTODO\n...\nRESULTADOS\n...\nDISCUSIÓN\n...\nCONCLUSIONES\n...",
+        "bad": "RESULTADOS\n...\nMÉTODO\n...\nDISCUSIÓN\n...\n[las secciones aparecen en un orden confuso]."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "INTRODUCCIÓN",
+          "MARCO TEÓRICO",
+          "MÉTODO",
+          "METODOLOGÍA",
+          "RESULTADOS",
+          "DISCUSIÓN",
+          "CONCLUSIONES"
+        ],
+        "regex": [],
+        "notes": "Comprobar que, cuando existan, las secciones de MARCO TEÓRICO, MÉTODO, RESULTADOS, DISCUSIÓN y CONCLUSIONES sigan un orden compatible con el esquema IMRyD."
+      },
+      "autoFixHint": "Reorganiza las secciones principales del informe para que sigan un orden coherente: introducción/marco teórico, método, resultados, discusión y conclusiones."
+    },
+    {
+      "ruleId": "CUN-SD-005",
+      "title": "Correspondencia entre objetivos y conclusiones",
+      "description": "Las conclusiones del trabajo deben guardar relación clara con los objetivos planteados al inicio del estudio.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 3.9 (Discussion).",
+      "localReference": "Guías CUN de investigación, apartado sobre coherencia entre objetivos y conclusiones.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "OBJETIVO GENERAL\nDeterminar el efecto de X en Y.\n...\nCONCLUSIONES\nLos resultados permiten concluir que X tiene un efecto significativo en Y...",
+        "bad": "OBJETIVO GENERAL\nAnalizar el impacto de X.\n...\nCONCLUSIONES\nSe presentan comentarios generales sin relacionarse con el objetivo formulado."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "OBJETIVOS",
+          "CONCLUSIONES"
+        ],
+        "regex": [
+          "OBJETIVO GENERAL",
+          "OBJETIVOS ESPEC[ÍI]FICOS",
+          "CONCLUSIONES"
+        ],
+        "notes": "Verificar de forma aproximada que existan secciones de objetivos y conclusiones. Un análisis semántico más fino puede implementarse en versiones futuras."
+      },
+      "autoFixHint": "Revisa que las conclusiones respondan explícitamente a los objetivos planteados al inicio del estudio, retomando sus términos clave."
+    },
+    {
+      "ruleId": "CUN-SD-006",
+      "title": "Mención de limitaciones del estudio",
+      "description": "Es recomendable que los informes de investigación incluyan una breve sección sobre las limitaciones y alcances del estudio.",
+      "source": "LOCAL",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 3.9 y 3.10 (Limitations, Future Directions).",
+      "localReference": "Recomendaciones CUN sobre redacción de la sección de discusión y conclusiones.",
       "severity": "suggestion",
-      "category": "scientific_design",
-      "applies_to_document_types": [
-        "articulo_cientifico",
-        "informe_investigacion",
-        "tesis_trabajo_grado"
-      ],
-      "auto_fix_hint": "Considere agregar una subsección o párrafo titulado 'LIMITACIONES' o 'LÍMITES DEL ESTUDIO' donde reconozca las restricciones metodológicas o alcance de la investigación."
+      "checkType": "regex",
+      "examples": {
+        "good": "LIMITACIONES\nEntre las limitaciones de este estudio se encuentran...\n",
+        "bad": "DISCUSIÓN\nSe comentan resultados, pero no se mencionan límites ni alcances del estudio."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [
+          "LIMITACIONES",
+          "LIMITES DEL ESTUDIO"
+        ],
+        "regex": [
+          "LIMITACIONES",
+          "L[ÍI]MITES DEL ESTUDIO"
+        ],
+        "notes": "Buscar encabezados o frases que indiquen 'LIMITACIONES' o 'LÍMITES DEL ESTUDIO'. Al no encontrarlas, generar una sugerencia (no un error grave)."
+      },
+      "autoFixHint": "Incluye un breve apartado sobre las limitaciones del estudio y posibles líneas de investigación futura."
     }
   ]
 }
