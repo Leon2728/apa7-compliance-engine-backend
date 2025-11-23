@@ -19,9 +19,9 @@ class GeneralStructureAgent(BaseAgent):
     Agente GENERALSTRUCTURE.
 
     Ahora soporta:
-      - Reglas regex a nivel documento.
-      - Reglas regex con scope="section" aplicadas solo dentro de secciones objetivo.
-      - Reglas estructurales (checkType="structural") basadas en presencia/orden de secciones.
+    - Reglas regex a nivel documento.
+    - Reglas regex con scope="section" aplicadas solo dentro de secciones objetivo.
+    - Reglas estructurales (checkType="structural") basadas en presencia/orden de secciones.
 
     Las reglas semantic se siguen dejando para una capa posterior más robusta,
     pero ya podemos aprovechar sectionTargets y scope para muchas validaciones
@@ -52,6 +52,10 @@ class GeneralStructureAgent(BaseAgent):
         section_index = self._detect_sections(lines)
 
         for rule in rules:
+            # No exigimos "Palabras clave" en actividades de curso (ACA)
+            if rule.rule_id == "CUN-GS-002" and profile.document_type == "actividad_curso":
+                continue
+
             # 1) Reglas estructurales: orden/presencia de secciones
             if rule.check_type == CheckType.structural:
                 violated = self._check_structural_rule(rule, section_index)
@@ -97,9 +101,9 @@ class GeneralStructureAgent(BaseAgent):
                 continue
 
             # 3) Reglas semantic: por ahora NO generamos findings automáticos
-            #    (requiere análisis más profundo). Se dejan para una fase de
-            #    implementación con spaCy / modelos lingüísticos.
-            #    Aquí simplemente las ignoramos para no introducir ruido.
+            # (requiere análisis más profundo). Se dejan para una fase de
+            # implementación con spaCy / modelos lingüísticos.
+            # Aquí simplemente las ignoramos para no introducir ruido.
             if rule.check_type == CheckType.semantic:
                 continue
 
@@ -116,7 +120,6 @@ class GeneralStructureAgent(BaseAgent):
         Devuelve un dict: nombre_normalizado -> índice de línea.
         """
         sections: Dict[str, int] = {}
-
         for idx, line in enumerate(lines):
             stripped = line.strip()
             if not stripped:
@@ -142,9 +145,9 @@ class GeneralStructureAgent(BaseAgent):
         Devuelve True si la regla estructural se considera VIOLADA.
 
         Lógica simple:
-          - Si la regla tiene sectionTargets, verificamos:
-              * que todas existan (presencia).
-              * que aparezcan en orden creciente de línea (si hay >1).
+        - Si la regla tiene sectionTargets, verificamos:
+            * que todas existan (presencia).
+            * que aparezcan en orden creciente de línea (si hay >1).
         """
         section_targets = rule.detection_hints.section_targets or []
         if not section_targets:
@@ -153,7 +156,6 @@ class GeneralStructureAgent(BaseAgent):
 
         missing = []
         positions: List[int] = []
-
         for target in section_targets:
             key = target.upper()
             if key not in section_index:
@@ -177,7 +179,6 @@ class GeneralStructureAgent(BaseAgent):
     def _check_regex_document_scope(self, rule: Rule, document_text: str) -> bool:
         """
         Devuelve True si la regla regex a nivel documento se considera VIOLADA.
-
         Es decir: si NINGÚN patrón de detection_hints.regex aparece.
         """
         patterns = rule.detection_hints.regex or []
@@ -206,13 +207,14 @@ class GeneralStructureAgent(BaseAgent):
         Devuelve True si la regla regex con scope=section se considera VIOLADA.
 
         Lógica:
-          - Identificamos las secciones objetivo (sectionTargets).
-          - Extraemos el bloque de texto de cada sección hasta la siguiente sección.
-          - Buscamos los patrones regex dentro de esos bloques.
-          - Si en ninguna sección objetivo se encuentra ningún patrón → violación.
+        - Identificamos las secciones objetivo (sectionTargets).
+        - Extraemos el bloque de texto de cada sección hasta la siguiente sección.
+        - Buscamos los patrones regex dentro de esos bloques.
+        - Si en ninguna sección objetivo se encuentra ningún patrón → violación.
         """
         section_targets = rule.detection_hints.section_targets or []
         patterns = rule.detection_hints.regex or []
+
         if not section_targets or not patterns:
             return False
 
@@ -230,6 +232,7 @@ class GeneralStructureAgent(BaseAgent):
                     break
             else:
                 end_line = len(lines)
+
             return "\n".join(lines[start_line:end_line])
 
         # Revisamos cada sección objetivo
