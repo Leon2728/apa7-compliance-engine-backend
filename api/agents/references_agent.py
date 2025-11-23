@@ -11,7 +11,7 @@ from api.models.lint_models import (
     FindingLocation,
 )
 from api.rules_library import RuleLibrary
-from api.rules_models import Rule, CheckType
+from api.rules_models import Rule, CheckType, RuleSource
 
 
 class ReferencesAgent(BaseAgent):
@@ -34,6 +34,7 @@ class ReferencesAgent(BaseAgent):
         profile: DocumentProfile,
     ) -> List[Finding]:
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+                is_international = context.profile_variant == "apa7_international"
         findings: List[Finding] = []
 
         text = document_text or ""
@@ -41,6 +42,8 @@ class ReferencesAgent(BaseAgent):
         ref_entries = self._extract_reference_entries(refs_block)
 
         for rule in rules:
+                        if is_international and rule.source == RuleSource.LOCAL:
+                                            continue
             if rule.rule_id == "CUN-REF-001":
                 findings.extend(self._check_ref_001(rule, ref_entries))
             elif rule.rule_id == "CUN-REF-006":
