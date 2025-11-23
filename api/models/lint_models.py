@@ -32,6 +32,7 @@ class LintContext(BaseModel):
     )
     layout: Optional[DocumentLayout] = None
     profile_variant: Literal["cun_official", "apa7_international"] | None = "cun_official"
+        metadata: dict[str, Any] | None = None
 
 
 class DocumentProfile(BaseModel):
