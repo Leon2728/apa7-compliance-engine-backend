@@ -8,6 +8,7 @@ from typing import List
 from api.agents.base_agent import BaseAgent
 from api.agents.document_profile_agent import DocumentProfileAgent
 from api.agents.math_equations_agent import MathEquationsAgent
+from api.agents.scientific_design_agent import ScientificDesignAgent
 from api.agents.general_structure_agent import GeneralStructureAgent
 from api.agents.tables_figures_agent import TablesFiguresAgent
 from api.agents.in_text_citations_agent import InTextCitationsAgent
@@ -40,6 +41,7 @@ class LintOrchestrator:
             InTextCitationsAgent(rule_library),
             ReferencesAgent(rule_library),
                         MathEquationsAgent(rule_library),
+                        ScientificDesignAgent(rule_library),
         ]
 
     async def lint_document(self, request: LintRequest) -> LintResponse:
