@@ -112,6 +112,7 @@ class LintRequest(BaseModel):
     context: LintContext = Field(
         default_factory=LintContext, description="Contexto opcional de linting"
     )
+    options: Optional[LintOptions] = None
 
 
 class LintResponse(BaseModel):
