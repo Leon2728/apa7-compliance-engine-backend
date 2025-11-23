@@ -11,7 +11,7 @@ from api.models.lint_models import (
 )
 from api.models.layout_models import DocumentLayout
 from api.rules_library import RuleLibrary
-from api.rules_models import Rule, CheckType
+from api.rules_models import Rule, CheckType, RuleSource
 
 
 class TablesFiguresAgent(BaseAgent):
@@ -40,6 +40,7 @@ class TablesFiguresAgent(BaseAgent):
         profile: DocumentProfile,
     ) -> List[Finding]:
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+                is_international = context.profile_variant == "apa7_international"
         findings: List[Finding] = []
 
         layout: Optional[DocumentLayout] = context.layout
@@ -48,6 +49,8 @@ class TablesFiguresAgent(BaseAgent):
             return findings
 
         for rule in rules:
+                        if is_international and rule.source == RuleSource.LOCAL:
+                                            continue
             if rule.check_type != CheckType.semantic:
                 # Este agente se centra en reglas semánticas basadas en layout.
                 continue
