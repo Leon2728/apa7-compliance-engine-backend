@@ -1,0 +1,72 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "METADATACONSISTENCY",
+  "rules": [
+    {
+      "ruleId": "CUN-MD-001",
+      "title": "Consistencia del tipo de documento entre contexto y perfil",
+      "description": "El tipo de documento declarado en el contexto (por ejemplo, actividad de curso, artículo científico, tesis) debería coincidir con el tipo de documento detectado en el perfil.",
+      "source": "LOCAL",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 1.1–1.2 (tipos de trabajos académicos).",
+      "localReference": "Lineamientos CUN sobre clasificación de trabajos escritos (actividad de curso, informe, tesis, artículo).",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Contexto: document_type = 'actividad_curso'\nPerfil detectado: document_type = 'actividad_curso'.",
+        "bad": "Contexto: document_type = 'articulo_cientifico'\nPerfil detectado: document_type = 'actividad_curso'."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Comparar el campo document_type del contexto con el document_type detectado en el perfil del documento. Si difieren, generar una advertencia."
+      },
+      "autoFixHint": "Revisa si el tipo de documento seleccionado en el sistema coincide con la naturaleza real del texto (actividad de curso, artículo, informe de investigación, tesis, etc.)."
+    },
+    {
+      "ruleId": "CUN-MD-002",
+      "title": "Presencia del nombre de la institución en el texto",
+      "description": "El nombre de la institución declarado en el contexto (por ejemplo, CUN) debería aparecer al menos una vez en el texto del documento, normalmente en la portada o encabezado.",
+      "source": "LOCAL",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 2.3 (Student Title Page) y 2.4 (Professional Title Page).",
+      "localReference": "Guías CUN para portada y presentación institucional de trabajos académicos.",
+      "severity": "warning",
+      "checkType": "regex",
+      "examples": {
+        "good": "Corporación Unificada Nacional de Educación Superior (CUN)\nPrograma de...",
+        "bad": "No aparece el nombre de la institución en ninguna parte del documento, a pesar de estar trabajando bajo lineamientos CUN."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Tomar el valor de context.institution (en minúsculas) y verificar si aparece en el texto (también en minúsculas)."
+      },
+      "autoFixHint": "Incluye el nombre completo de la institución (por ejemplo, Corporación Unificada Nacional de Educación Superior – CUN) en la portada o encabezado del documento."
+    },
+    {
+      "ruleId": "CUN-MD-003",
+      "title": "Consistencia del idioma entre contexto y perfil",
+      "description": "El idioma declarado en el contexto (por ejemplo, 'es' o 'en') debería coincidir con el idioma detectado en el perfil del documento.",
+      "source": "LOCAL",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 4.1–4.11 (Writing Style and Grammar).",
+      "localReference": "Lineamientos CUN sobre idioma de presentación de trabajos académicos.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Contexto: language = 'es'\nPerfil detectado: language = 'es'.",
+        "bad": "Contexto: language = 'en'\nPerfil detectado: language = 'es'."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Comparar el campo language del contexto con el language detectado en el perfil. Si difieren, generar una advertencia."
+      },
+      "autoFixHint": "Revisa que el idioma seleccionado en la plataforma coincida con el idioma real del documento, y ajusta el valor de 'language' en el contexto si es necesario."
+    }
+  ]
+}
