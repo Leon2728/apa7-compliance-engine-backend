@@ -1,0 +1,76 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "EQUATIONS",
+  "rules": [
+    {
+      "ruleId": "CUN-ME-001",
+      "title": "Numeración consecutiva de ecuaciones",
+      "description": "Cuando las ecuaciones se numeran, se recomienda que la numeración sea consecutiva y coherente a lo largo del documento.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 6.28 (equation numbers).",
+      "localReference": "Guías CUN de presentación de trabajos con contenido matemático.",
+      "severity": "warning",
+      "checkType": "structural",
+      "examples": {
+        "good": "Ecuación (1): y = mx + b\nEcuación (2): z = ax^2 + c",
+        "bad": "Ecuación (1): y = mx + b\nEcuación (3): z = ax^2 + c"
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "\\(\\d{1,3}\\)"
+        ],
+        "notes": "Extraer los números de ecuación entre paréntesis (n) asociados a líneas que contengan ecuaciones y verificar que la secuencia sea coherente (1, 2, 3, ...)."
+      },
+      "autoFixHint": "Ajusta la numeración de las ecuaciones para que siga una secuencia consecutiva (1, 2, 3, ...), sin duplicados ni saltos innecesarios."
+    },
+    {
+      "ruleId": "CUN-ME-002",
+      "title": "Coherencia entre referencias a ecuaciones y numeración",
+      "description": "Las referencias en el texto a ecuaciones numeradas (por ejemplo, 'como se muestra en la ecuación (3)') deben corresponder a números de ecuación realmente existentes.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 6.28–6.30.",
+      "localReference": "Guías CUN de redacción de trabajos con fórmulas y ecuaciones.",
+      "severity": "error",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Como se observa en la ecuación (2), la pendiente m representa...\n\n(2) y = mx + b",
+        "bad": "Como se observa en la ecuación (5)...\n\n(1) y = mx + b\n(2) z = ax^2 + c"
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [
+          "ecuaci[óo]n\\s*\\(\\d{1,3}\\)"
+        ],
+        "notes": "Buscar patrones de texto del tipo 'ecuación (n)' y comprobar que para cada n exista al menos una ecuación numerada (n) en el documento."
+      },
+      "autoFixHint": "Revisa todas las referencias a ecuaciones en el texto y asegúrate de que la numeración coincida con las ecuaciones realmente presentes."
+    },
+    {
+      "ruleId": "CUN-ME-003",
+      "title": "Ecuaciones numeradas sin referencia en el texto",
+      "description": "Es recomendable que las ecuaciones numeradas se referencien al menos una vez en el texto, para justificar su inclusión.",
+      "source": "LOCAL",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), 7th ed., secc. 6.27–6.30 (uso de ecuaciones en el texto).",
+      "localReference": "Recomendaciones CUN sobre claridad y pertinencia de ecuaciones en trabajos académicos.",
+      "severity": "suggestion",
+      "checkType": "semantic",
+      "examples": {
+        "good": "La ecuación (3) resume la relación entre las variables...\n\n(3) y = mx + b",
+        "bad": "(3) y = mx + b\n\n[La ecuación aparece numerada pero nunca se menciona en el texto.]"
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "regex": [],
+        "notes": "Comparar el conjunto de números de ecuación detectados con el conjunto de referencias del tipo 'ecuación (n)'. Los números presente solo en las ecuaciones, pero no en las referencias, se marcarán como sugerencia de mejora."
+      },
+      "autoFixHint": "Revisa si las ecuaciones numeradas se mencionan explícitamente en el texto. Si alguna no es relevante, considera eliminarla o integrarla mejor en la explicación."
+    }
+  ]
+}
