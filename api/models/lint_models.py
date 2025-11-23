@@ -29,8 +29,9 @@ class LintContext(BaseModel):
     profile_id: str = Field(
         default="apa7_cun",
         description="Perfil de reglas a usar (ej: 'apa7_cun')",
-            layout: Optional[DocumentLayout] = None
     )
+    layout: Optional[DocumentLayout] = None
+    profile_variant: Literal["cun_official", "apa7_international"] | None = "cun_official"
 
 
 class DocumentProfile(BaseModel):
@@ -89,6 +90,15 @@ class LintSummary(BaseModel):
     error_count: int
     warning_count: int
     suggestion_count: int
+
+
+class LintOptions(BaseModel):
+    """Opciones de configuración para la ejecución del linting."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    agents: list[str] | None = None
+    locale: Literal["es", "en"] | None = None
 
 
 class LintRequest(BaseModel):
