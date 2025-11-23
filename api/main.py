@@ -53,4 +53,8 @@ async def lint(request: LintRequest) -> LintResponse:
     Devuelve:
       - LintResponse con findings, summary, perfil y metadatos.
     """
+    # Propagar metadata desde request a context si está presente
+    if request.metadata and request.context.metadata is None:
+        request.context.metadata = request.metadata
+    
     return await orchestrator.run(request)
