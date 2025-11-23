@@ -49,6 +49,39 @@ class DocumentProfile(BaseModel):
     confidence: float = 0.0
     raw_tags: List[str] = []
 
+    document_type: Literal[
+        "actividad_curso",
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado",
+        "guia_docente",
+        "otro",
+    ] = "otro"
+
+    author_role: Literal[
+        "estudiante_individual",
+        "estudiantes_equipo",
+        "docente",
+        "institucion",
+        "otro",
+    ] = "otro"
+
+    audience_role: Literal[
+        "docente",
+        "estudiantes",
+        "comunidad_academica",
+        "publico_general",
+        "otro",
+    ] = "docente"
+
+    direction: Literal[
+        "estudiante_a_docente",
+        "estudiantes_a_docente",
+        "docente_a_estudiantes",
+        "institucion_a_estudiantes",
+        "otro",
+    ] = "otro"
+
 
 class FindingLocation(BaseModel):
     """Ubicación aproximada de un hallazgo en el documento."""
