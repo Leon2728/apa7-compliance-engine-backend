@@ -1,0 +1,69 @@
+{
+  "profileId": "apa7_cun",
+  "agentId": "GLOBALFORMAT",
+  "rules": [
+    {
+      "ruleId": "CUN-GF-001",
+      "title": "Validación de fuente y tamaño",
+      "description": "La fuente del documento debe ser Times New Roman o Arial, con tamaño entre 11 y 12 puntos.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 2.18-2.21 (typeface and font).",
+      "localReference": "Guía APA CUN, especificaciones de formato de texto.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Documento con fuente Times New Roman o Arial, tamaño 12pt.",
+        "bad": "Documento con fuente Calibri, tamaño 10pt."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "notes": "Validar que la fuente sea 'Times New Roman' o 'Arial' y el tamaño esté entre 11 y 12 puntos."
+      },
+      "autoFixHint": "Cambia la fuente del documento a Times New Roman o Arial y establece el tamaño en 12 puntos."
+    },
+    {
+      "ruleId": "CUN-GF-002",
+      "title": "Validación de interlineado",
+      "description": "El espaciado entre líneas debe ser doble (2.0), con un rango aceptable de 1.8 a 2.2.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 2.1 (spacing).",
+      "localReference": "Guía APA CUN, requisitos de interlineado.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Documento con interlineado doble (2.0).",
+        "bad": "Documento con interlineado simple (1.0) o 1.5."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "notes": "Verificar que el espaciado entre líneas sea ~2.0, aceptando valores en el rango [1.8, 2.2]."
+      },
+      "autoFixHint": "Establece el interlineado a doble (2.0) en todo el documento."
+    },
+    {
+      "ruleId": "CUN-GF-003",
+      "title": "Validación de márgenes de página",
+      "description": "Los márgenes del documento (superior, inferior, izquierdo y derecho) deben estar entre 2.3 y 2.7 cm.",
+      "source": "MIXED",
+      "baseStandard": "APA7",
+      "apaReference": "APA (2019), Publication Manual of the APA (7th ed.), secc. 2.1 (margins).",
+      "localReference": "Guía APA CUN, especificaciones de márgenes.",
+      "severity": "warning",
+      "checkType": "semantic",
+      "examples": {
+        "good": "Documento con márgenes de 2.5 cm en todos los lados.",
+        "bad": "Documento con márgenes de 1.5 cm o 3.0 cm."
+      },
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": [],
+        "notes": "Verificar que todos los márgenes (top, bottom, left, right) estén en el rango [2.3, 2.7] cm."
+      },
+      "autoFixHint": "Ajusta todos los márgenes del documento a 2.5 cm (o cualquier valor entre 2.3 y 2.7 cm)."
+    }
+  ]
+}
