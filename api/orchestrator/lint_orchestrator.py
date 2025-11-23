@@ -21,9 +21,9 @@ class LintOrchestrator:
     Main orchestrator of the APA7 compliance engine.
 
     Flow:
-      1) Run DOCUMENTPROFILE to infer the document profile and related findings.
-      2) Run the rest of the agents in parallel (currently GENERALSTRUCTURE).
-      3) Aggregate all findings and return a uniform LintResponse.
+        1) Run DOCUMENTPROFILE to infer the document profile and related findings.
+        2) Run the rest of the agents in parallel (currently GENERALSTRUCTURE).
+        3) Aggregate all findings and return a uniform LintResponse.
     """
 
     def __init__(self, rule_library: RuleLibrary) -> None:
@@ -44,16 +44,25 @@ class LintOrchestrator:
         start_time = perf_counter()
         text = request.text
 
-        # 1. Analyze Profile (sequential)
+        # 1. Analyze profile (sequential)
         profile, profile_findings = await self.document_profile_agent.run(text)
 
         # Context for other agents
         context = request.context  # has page_count, etc.
 
         # 2. Run other agents in parallel
+        # Agent filtering logic
+        requested_agents: set[str] | None = None
+        if request.options and request.options.agents:
+            requested_agents = set(request.options.agents)
+
+        agents_to_run = self.agents
+        if requested_agents:
+            agents_to_run = [agent for agent in self.agents if agent.agent_id in requested_agents]
+
         # Gather tasks
         tasks = []
-        for agent in self.agents:
+        for agent in agents_to_run:
             tasks.append(agent.run(text, context, profile))
 
         results_list = await asyncio.gather(*tasks, return_exceptions=True)
@@ -65,15 +74,15 @@ class LintOrchestrator:
             if isinstance(res, list):
                 all_findings.extend(res)
             else:
-                # If an exception occurred, we might log it or add a system finding
-                # For now, we just print/ignore
+                # If an exception occurred, we could log it or add a system finding.
+                # For now, just print/ignore
                 print(f"Agent error: {res}")
 
         # Calculate stats
         error_count = sum(1 for f in all_findings if f.severity == Severity.ERROR)
         warning_count = sum(1 for f in all_findings if f.severity == Severity.WARNING)
         info_count = sum(1 for f in all_findings if f.severity == Severity.INFO)
-        # hint/typographical? APA7 usually maps to these 3.
+        # suggestion/typo? APA7 generally maps to these 3.
 
         # Sort findings by location (if possible)
         # A simple sort key: (page or 0, line or 0, start_offset or 0)
@@ -93,7 +102,7 @@ class LintOrchestrator:
             total_findings=len(all_findings),
             errors=error_count,
             warnings=warning_count,
-            infos=info_count,
+            info=info_count,
             compliance_score=self._calculate_score(error_count, warning_count),
             processing_time_ms=int(duration * 1000),
             timestamp=datetime.utcnow().isoformat(),
