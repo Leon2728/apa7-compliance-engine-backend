@@ -1,0 +1,78 @@
+{
+  "agent_id": "SCIENTIFICDESIGN",
+  "agent_name": "Scientific Design Validator",
+  "rules": [
+    {
+      "rule_id": "CUN-SD-001",
+      "description": "El documento de investigación debe indicar claramente el problema de investigación y/o los objetivos del estudio.",
+      "severity": "error",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Incluya una sección que establezca el problema de investigación u objetivo general del estudio. Por ejemplo: 'PROBLEMA DE INVESTIGACIÓN' u 'OBJETIVO GENERAL'."
+    },
+    {
+      "rule_id": "CUN-SD-002",
+      "description": "Los trabajos de investigación deben incluir una sección de 'Método' o 'Metodología' que describa cómo se realizó el estudio.",
+      "severity": "error",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Agregue una sección titulada 'MÉTODO' o 'METODOLOGÍA' donde explique el diseño del estudio, participantes, instrumentos y procedimientos."
+    },
+    {
+      "rule_id": "CUN-SD-003",
+      "description": "Los informes científicos deben presentar secciones de 'Resultados' y 'Discusión' (o 'Análisis y Discusión').",
+      "severity": "error",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Incluya secciones separadas tituladas 'RESULTADOS' y 'DISCUSIÓN' (o 'ANÁLISIS Y DISCUSIÓN'). En Resultados presente los hallazgos; en Discusión, interprete su significado."
+    },
+    {
+      "rule_id": "CUN-SD-004",
+      "description": "La estructura del documento debe seguir un orden lógico tipo IMRyD: Introducción/Marco teórico → Método → Resultados → Discusión → Conclusiones.",
+      "severity": "warning",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Reorganice las secciones principales en el orden convencional: Introducción, Marco teórico, Método, Resultados, Discusión, Conclusiones."
+    },
+    {
+      "rule_id": "CUN-SD-005",
+      "description": "El documento debe establecer objetivos al inicio y presentar conclusiones que respondan a dichos objetivos.",
+      "severity": "warning",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Asegúrese de que el documento incluya una sección de 'OBJETIVOS' (general y específicos) y una sección de 'CONCLUSIONES' que retome esos objetivos."
+    },
+    {
+      "rule_id": "CUN-SD-006",
+      "description": "Se recomienda incluir una sección sobre limitaciones del estudio para reconocer alcances y restricciones de la investigación.",
+      "severity": "suggestion",
+      "category": "scientific_design",
+      "applies_to_document_types": [
+        "articulo_cientifico",
+        "informe_investigacion",
+        "tesis_trabajo_grado"
+      ],
+      "auto_fix_hint": "Considere agregar una subsección o párrafo titulado 'LIMITACIONES' o 'LÍMITES DEL ESTUDIO' donde reconozca las restricciones metodológicas o alcance de la investigación."
+    }
+  ]
+}
