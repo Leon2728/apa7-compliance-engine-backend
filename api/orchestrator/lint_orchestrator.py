@@ -13,6 +13,7 @@ from api.agents.general_structure_agent import GeneralStructureAgent
 from api.agents.tables_figures_agent import TablesFiguresAgent
 from api.agents.in_text_citations_agent import InTextCitationsAgent
 from api.agents.references_agent import ReferencesAgent
+from api.agents.global_format_agent import GlobalFormatAgent
 from api.agents.metadata_consistency_agent import MetadataConsistencyAgent
 
 from api.models.lint_models import LintRequest, LintResponse, LintSummary
@@ -39,6 +40,7 @@ class LintOrchestrator:
         # Agents that implement BaseAgent.run(...)
         self.agents: List[BaseAgent] = [
             GeneralStructureAgent(rule_library),
+                        GlobalFormatAgent(rule_library),
             TablesFiguresAgent(rule_library),
             InTextCitationsAgent(rule_library),
             ReferencesAgent(rule_library),
