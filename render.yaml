@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: apa7-compliance-engine
+    name: apa7-compliance-engine-backend
     env: python
     pythonVersion: "3.11"
     buildCommand: "pip install -r requirements.txt"
