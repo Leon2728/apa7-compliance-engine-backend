@@ -10,7 +10,7 @@ from api.models.lint_models import (
     FindingLocation,
 )
 from api.rules_library import RuleLibrary
-from api.rules_models import Rule
+from api.rules_models import Rule, RuleSource
 
 
 class MetadataConsistencyAgent(BaseAgent):
@@ -43,8 +43,13 @@ class MetadataConsistencyAgent(BaseAgent):
         lower_text = text.lower()
 
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+        
+        is_international = context.profile_variant == "apa7_international"
 
         for rule in rules:
+                        # En modo APA7 internacional, saltar reglas puramente locales CUN.
+            if is_international and rule.source == RuleSource.LOCAL:
+                continue
             if rule.rule_id == "CUN-MD-001":
                 findings.extend(
                     self._check_md_001_document_type_consistency(rule, context, profile)
