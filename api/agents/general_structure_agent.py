@@ -11,7 +11,7 @@ from api.models.lint_models import (
     FindingLocation,
 )
 from api.rules_library import RuleLibrary
-from api.rules_models import CheckType, Rule, Severity, DetectionScope
+from api.rules_models import CheckType, Rule, Severity, DetectionScope, RuleSource
 
 
 class GeneralStructureAgent(BaseAgent):
@@ -40,11 +40,14 @@ class GeneralStructureAgent(BaseAgent):
         profile: DocumentProfile,
     ) -> List[Finding]:
         rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+                is_international = context.profile_variant == "apa7_international"
         findings: List[Finding] = []
 
         if not document_text:
             # Documento vacío: todas las reglas estructurales/regex fallan de facto.
             for rule in rules:
+                            if is_international and rule.source == RuleSource.LOCAL:
+                                                continue
                 findings.append(self._build_finding_empty_doc(rule))
             return findings
 
