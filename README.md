@@ -190,6 +190,55 @@ DEBUG=false
 
 
 
+## 🏗️ Arquitectura del backend
+
+Este backend integra un motor de cumplimiento APA7+CUN con soporte opcional para LLM. La arquitectura sigue principios SOLID con clara separación de responsabilidades:
+
+```text
+apa7-compliance-engine-backend/
+├── api/
+│   ├── main.py                    # Aplicación FastAPI principal
+│   ├── config.py                  # Configuración y feature flags (LLM_ENABLED)
+│   ├── principal.py               # Punto de entrada de la app
+│   ├── llm/
+│   │   ├── __init__.py            # Exportaciones del módulo LLM
+│   │   ├── client.py              # Interfaz abstracta BaseLLMClient
+│   │   ├── providers.py           # Implementación OpenAILLMClient
+│   │   └── prompts/
+│   │       └── coach/
+│   │           └── plan_section_es.md
+│   ├── services/
+│   │   └── coach_service.py       # Servicio de coaching con LLM
+│   ├── routes/
+│   │   ├── __init__.py            # Rutas paquete init
+│   │   └── coach_router.py        # Router del endpoint /coach
+│   ├── orchestrator/
+│   │   └── lint_orchestrator.py   # Orquestador de agentes
+│   ├── models/
+│   │   ├── coach/
+│   │   └── lint_models.py         # Modelos Pydantic
+│   ├── agents/                    # Agentes de validación
+│   ├── rules/                     # Motor de reglas
+│   │   └── apa7_cun/              # Reglas APA7+CUN
+│   └── normas/                    # Normativas y estándares
+├── tests/                          # Suite de pruebas
+├── docs/                           # Documentación
+├── .env.example                    # Variables de entorno
+├── pyproject.toml                  # Configuración
+├── requirements.txt                # Dependencias
+└── README.md                       # Este archivo
+```
+
+### Componentes Clave
+
+- **Motor de Reglas**: Validación flexible basada en reglas configurables (APA7+CUN)
+- **Agentes**: Módulos independientes para diferentes tipos de validación
+- **Orquestador**: Coordina múltiples agentes y ejecuta la lógica del compliance engine
+- **API REST**: Endpoints FastAPI (/lint, /coach, /health)
+- **LLM Opcional**: Infraestructura LLM activada con `LLM_ENABLED=true`
+
+
+
 ## 🤝 Contribuciones
 
 Por favor, lee [CONTRIBUTING.md](./CONTRIBUTING.md) para conocer nuestras directrices.
