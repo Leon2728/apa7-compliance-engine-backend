@@ -1,8 +1,7 @@
 """Configuration module for APA7 compliance engine with LLM support."""
 import os
 from functools import lru_cache
-from pydantic import BaseSettings
-
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     """Application settings with LLM configuration."""
