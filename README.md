@@ -89,6 +89,36 @@ tests/                   # Suite de pruebas
 - **API Docs**: `http://localhost:8000/docs` (Swagger)
 - **ReDoc**: `http://localhost:8000/redoc`
 
+- ## 🤖 Reglas LLM Semánticas (llm_semantic)
+
+Esta versión incluye soporte para reglas que utilizan modelos LLM (Large Language Models) para análisis semántico avanzado de documentos.
+
+### ¿Qué es checkType="llm_semantic"?
+
+`llm_semantic` es un tipo de regla que delega la evaluación de cumplimiento a un modelo LLM, permitiendo análisis más profundos y contextuales que las reglas basadas en patrones regex.
+
+### Configuración de llmConfig
+
+Cada regla LLM incluye un objeto `llmConfig` que controla su comportamiento:
+
+- `enabled`: Habilita/deshabilita la evaluación LLM
+- `mode`: Rol del LLM (validator, classifier, suggester, generator)
+- `max_chars`: Máximo de caracteres a procesar
+- `forbidden_behaviors`: Restricciones que el LLM debe respetar
+- `allowed_suggestion_types`: Tipos de sugerencias permitidas
+- `output_format`: Formato esperado de respuesta LLM
+
+### Optionalidad del LLM - 100% Backward Compatible
+
+El sistema es completamente funcional sin LLM configurado:
+
+- Si `LLM_ENABLED=false`: Las reglas llm_semantic se omiten silenciosamente (sin errores)
+- Si no hay cliente LLM disponible: Las reglas llm_semantic no se ejecutan
+- El resto del motor sigue funcionando normalmente
+- **Sin LLM, el comportamiento es idéntico a versiones anteriores**
+
+
+
 ## 🤝 Contribuciones
 
 Por favor, lee [CONTRIBUTING.md](./CONTRIBUTING.md) para conocer nuestras directrices.
