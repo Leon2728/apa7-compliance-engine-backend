@@ -47,22 +47,7 @@ async def coach_endpoint(request: CoachReques, service: CoachService = Depends(g
         - CLARIFY_INSTRUCTIONS
     """
 
-    if request.mode == CoachMode.PLAN_SECTION:
-        return await _handle_plan_section(request)
-
-    if request.mode == CoachMode.REVIEW_SECTION:
-        if not request.student_text:
-            raise HTTPException(
-                status_code=400,
-                detail="student_text es obligatorio para REVIEW_SECTION",
-            )
-        return await _handle_review_section(request)
-
-    if request.mode == CoachMode.CLARIFY_INSTRUCTIONS:
-        return await _handle_clarify_instructions(request)
-
-    raise HTTPException(status_code=400, detail="Modo no soportado")
-
+    return await service.handle(request)
 
 # --------- Construccion de prompts / personalidad del coach --------- #
 
