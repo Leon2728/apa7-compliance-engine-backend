@@ -1,0 +1,31 @@
+{
+  "rules": [
+    {
+      "ruleId": "CUN-GS-LLMQ-001",
+      "title": "Resumen: Calidad del contenido mediante análisis LLM",
+      "description": "Valida la calidad semántica del RESUMEN usando un modelo LLM para detectar problemas como redundancia, claridad insuficiente, o estructura inadecuada.",
+      "severity": "warning",
+      "agentId": "GENERALSTRUCTURE",
+      "checkType": "llm_semantic",
+      "detectionHints": {
+        "scope": "document",
+        "sectionTargets": ["RESUMEN"],
+        "approximate_offset": "1000-3000 chars"
+      },
+      "llmConfig": {
+        "enabled": true,
+        "mode": "validator",
+        "max_chars": 2000,
+        "forbidden_behaviors": [
+          "No inventar resultados o conclusiones del documento",
+          "No reescribir completamente el resumen",
+          "No cambiar el significado de los hallazgos principales"
+        ],
+        "allowed_suggestion_types": ["rewording", "structure_hint"],
+        "output_format": "JSON_FINDINGS_V1"
+      },
+      "autoFixHint": "Revisar el RESUMEN para mejorar clarity, eliminar redundancias, y asegurar que refleja acuradamente los hallazgos del documento.",
+      "source": "LOCAL"
+    }
+  ]
+}
