@@ -1,4 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter,Depends
+import os
+from typing import Optional
+
+from api.config import get_settings
+from api.services.coach_service import CoachService
+from api.llm.client import BaseLLMClient
 from api.models.coach import (
     CoachRequest,
     CoachResponse,
@@ -11,9 +17,23 @@ from api.models.coach import (
 
 router = APIRouter(prefix="/coach", tags=["coach"])
 
+def get_coach_service() -> CoachService:
+    """Get coach service with optional LLM client."""
+    settings = get_settings()
+    llm_client: Optional[BaseLLMClient] = None
+    
+    if settings.LLM_ENABLED:
+        try:
+            from api.llm.providers import OpenAILLMClient
+            llm_client = OpenAILLMClient()
+        except Exception:
+            pass
+    
+    return CoachService(llm_client=llm_client)
+
 
 @router.post("", response_model=CoachResponse)
-async def coach_endpoint(request: CoachRequest) -> CoachResponse:
+async def coach_endpoint(request: CoachReques, service: CoachService = Depends(get_coach_service))) -> CoachResponse:
     """
     Endpoint principal de coach academico.
 
