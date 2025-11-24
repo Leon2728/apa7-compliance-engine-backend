@@ -89,6 +89,107 @@ tests/                   # Suite de pruebas
 - **API Docs**: `http://localhost:8000/docs` (Swagger)
 - **ReDoc**: `http://localhost:8000/redoc`
 
+## 🤖 Configuración del LLM (Opcional)
+
+Esta versión incluye soporte opcional para integración con modelos de lenguaje (LLM) a través de OpenAI. El sistema funciona perfectamente sin LLM habilitado.
+
+### Variables de Entorno
+
+#### LLM_ENABLED
+- **Default:** `false`
+- **Descripción:** Activa o desactiva la funcionalidad de coaching asistido por IA.
+- **Valores:** `true`, `false`, `1`, `0`, `yes`, `no`
+- **Comportamiento:**
+  - `false` → Motor de reglas standard, /coach retorna respuestas genéricas de fallback
+  - `true` → /coach utiliza OpenAI para coaching inteligente (requiere OPENAI_API_KEY)
+
+#### OPENAI_API_KEY
+- **Default:** Vacío
+- **Descripción:** Tu clave API de OpenAI (obtener en https://platform.openai.com/api-keys)
+- **Requerido:** Sólo si `LLM_ENABLED=true`
+- **Nota de Seguridad:** Nunca comitees esta clave; usa variables de entorno o secrets en CI/CD
+
+#### OPENAI_MODEL
+- **Default:** `gpt-4`
+- **Descripción:** Modelo de OpenAI a utilizar
+- **Opciones:** `gpt-4`, `gpt-4-turbo`, `gpt-3.5-turbo`, etc.
+- **Requerido:** No (solo cuando LLM_ENABLED=true)
+
+#### OPENAI_TIMEOUT
+- **Default:** `30` segundos
+- **Descripción:** Tiempo máximo de espera para llamadas a OpenAI API
+- **Requerido:** No
+
+### Comportamiento Esperado
+
+#### Escenario 1: LLM Deshabilitado (Default)
+```bash
+LLM_ENABLED=false
+```
+**Resultado:**
+- ✅ App arranca sin problemas
+- ✅ /lint funciona (sin cambios)
+- ✅ /health funciona (sin cambios)
+- ✅ /coach disponible pero retorna respuestas fallback genéricas
+- ✅ Cero dependencias en OpenAI - no requiere OPENAI_API_KEY
+
+#### Escenario 2: LLM Habilitado con Credenciales Válidas
+```bash
+LLM_ENABLED=true
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4
+```
+**Resultado:**
+- ✅ App arranca normalmente
+- ✅ /lint funciona (sin cambios)
+- ✅ /coach utiliza OpenAI para coaching inteligente
+- ✅ Respuestas contextuales y personalizadas por IA
+
+#### Escenario 3: LLM Habilitado pero sin API Key
+```bash
+LLM_ENABLED=true
+OPENAI_API_KEY=  # Vacío
+```
+**Resultado:**
+- ✅ App arranca (degradación elegante)
+- ✅ /lint funciona (sin cambios)
+- ✅ /coach retorna respuestas fallback (sin errores)
+- ✅ Logs indican que LLM no está disponible
+
+### Ejemplo: .env para Desarrollo
+
+```
+# Sólo reglas, sin LLM
+LLM_ENABLED=false
+
+# O, con LLM en staging/producción (ocultar en .gitignore)
+# LLM_ENABLED=true
+# OPENAI_API_KEY=sk-tu-clave-aqui
+# OPENAI_MODEL=gpt-4
+# OPENAI_TIMEOUT=30
+
+DEBUG=false
+```
+
+### Recomendaciones de Despliegue
+
+1. **Desarrollo Local:** Mantener `LLM_ENABLED=false` para evitar dependencias externas
+2. **Testing:** Probar con `LLM_ENABLED=false` primero, luego con `true` en ambiente de staging
+3. **Producción:** 
+   - ⚠️ Inicialmente dejar `LLM_ENABLED=false`
+   - ✅ Monitorear logs en staging con LLM habilitado
+   - ✅ Solo activar en producción después de validación exhaustiva
+   - ✅ Usar secrets manager para OPENAI_API_KEY
+   - ✅ Tener plan de rollback (cambiar flag a false instantáneamente)
+
+### Endpoints Afectados
+
+- **GET /health** → Sin cambios
+- **POST /lint** → Sin cambios (LLM integración futura)
+- **POST /coach** → Nuevo; delega a CoachService que usa LLM si está disponible
+
+
+
 ## 🤝 Contribuciones
 
 Por favor, lee [CONTRIBUTING.md](./CONTRIBUTING.md) para conocer nuestras directrices.
