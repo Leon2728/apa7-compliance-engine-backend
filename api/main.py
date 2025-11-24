@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from api.models.lint_models import LintRequest, LintResponse
 from api.orchestrator.lint_orchestrator import LintOrchestrator
 from api.rules_library import RuleLibrary
+from api.routes import coach_router
 
 app = FastAPI(
     title="APA7 Compliance Engine Backend",
@@ -24,6 +25,9 @@ rule_library = RuleLibrary(base_dir=RULES_BASE_DIR, profile_id="apa7_cun")
 
 # Orquestador principal
 orchestrator = LintOrchestrator(rule_library=rule_library)
+
+# Registrar routers adicionales
+app.include_router(coach_router.router)
 
 
 @app.get("/health")
