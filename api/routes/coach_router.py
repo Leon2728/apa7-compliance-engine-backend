@@ -8,8 +8,22 @@ from api.models.coach import (
     FeedbackItem,
     CoachContext,
 )
+from typing import Optional
+from api.services.coach_service import CoachService
 
 router = APIRouter(prefix="/coach", tags=["coach"])
+
+def get_coach_service(llm_client: Optional['BaseLLMClient'] = None) -> CoachService:
+    """
+    Construye una instancia de CoachService con el cliente LLM.
+    
+    Args:
+        llm_client: Cliente LLM opcional. Si no se proporciona, el servicio funcionara en modo degradado.
+    
+    Returns:
+        CoachService configurado y listo para usar.
+    """
+    return CoachService(llm_client=llm_client)
 
 
 @router.post("", response_model=CoachResponse)
@@ -25,6 +39,7 @@ async def coach_endpoint(request: CoachRequest) -> CoachResponse:
         - PLAN_SECTION
         - REVIEW_SECTION
         - CLARIFY_INSTRUCTIONS
+            - DETECT_PROFILE
     """
 
     if request.mode == CoachMode.PLAN_SECTION:
@@ -40,6 +55,10 @@ async def coach_endpoint(request: CoachRequest) -> CoachResponse:
 
     if request.mode == CoachMode.CLARIFY_INSTRUCTIONS:
         return await _handle_clarify_instructions(request)
+
+    if request.mode == CoachMode.DETECT_PROFILE:
+        coach_service = get_coach_service(llm_client=None)  # TODO: Obtener llm_client desde configuracion
+        return await coach_service.handle(request)
 
     raise HTTPException(status_code=400, detail="Modo no soportado")
 

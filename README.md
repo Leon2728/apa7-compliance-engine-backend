@@ -101,6 +101,46 @@ Este proyecto está bajo la licencia [MIT](./LICENSE).
 
 Para preguntas o sugerencias, abre un issue en el repositorio.
 
+## 🔍 Modos de Coach
+
+### DETECT_PROFILE
+
+El modo `DETECT_PROFILE` analiza un documento para identificar y validar la estructura según los estándares APA7.
+
+**Endpoint:** `POST /coach`
+
+**Request:**
+```json
+{
+  "mode": "DETECT_PROFILE",
+  "document_text": "Contenido del documento...",
+  "context": "contexto_opcional"
+}
+```
+
+**Response:**
+```json
+{
+  "mode": "DETECT_PROFILE",
+  "profile_analysis": {
+    "main_elements": ["abstract", "introduction"],
+    "found_elements": ["abstract"],
+    "missing_elements": ["introduction"],
+    "formatting_issues": ["Falta numeración de páginas"],
+    "compliance_score": 0.75,
+    "recommendations": ["Añadir numeración de páginas"]
+  }
+}
+```
+
+**Características:**
+- Análisis automático de estructura del documento
+- Identificación de elementos APA7 presentes y faltantes
+- Cálculo de puntuación de conformidad
+- Recomendaciones específicas para mejorar
+- Soporte para fallback cuando LLM no está disponible
+
+
 ---
 
 **Estado**: En desarrollo 🚧
