@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel
+from api.models.profile_models import DocumentProfileAnalysis
 
 
 class CoachProfile(str, Enum):
@@ -24,6 +25,7 @@ class CoachMode(str, Enum):
     PLAN_SECTION = "PLAN_SECTION"
     REVIEW_SECTION = "REVIEW_SECTION"
     CLARIFY_INSTRUCTIONS = "CLARIFY_INSTRUCTIONS"
+        DETECT_PROFILE = "DETECT_PROFILE"
 
 
 class PaperProfile(str, Enum):
@@ -93,6 +95,7 @@ class CoachRequest(BaseModel):
 
     # Pregunta del estudiante sobre el ACA (para CLARIFY_INSTRUCTIONS)
     student_question: Optional[str] = None
+    document_text: Optional[str] = None  # Texto del documento para clasificación de perfil
 
 
 class FeedbackItem(BaseModel):
@@ -108,6 +111,7 @@ class CoachResponse(BaseModel):
     success: bool = True
     profile: CoachProfile
     mode: CoachMode
+    profile_analysis: Optional[DocumentProfileAnalysis] = None  # Resultado del clasificador de perfil (para DETECT_PROFILE)
 
     # PLAN_SECTION
     outline: List[str] = []          # esquema de la sección
