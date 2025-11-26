@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Tuple
-
+from typing import Dict, List, Optional, Tuple
 from api.agents.base_agent import BaseAgent
 from api.models.lint_models import (
     LintContext,
@@ -12,6 +11,7 @@ from api.models.lint_models import (
 )
 from api.rules_library import RuleLibrary
 from api.rules_models import CheckType, Rule, Severity, DetectionScope, RuleSource
+from api.llm.rule_runner import LLMRuleRunner
 
 
 class GeneralStructureAgent(BaseAgent):
@@ -30,10 +30,9 @@ class GeneralStructureAgent(BaseAgent):
 
     agent_id = "GENERALSTRUCTURE"
 
-    def __init__(self, rule_library: RuleLibrary) -> None:
+    def __init__(self, rule_library: RuleLibrary, llm_rule_runner: Optional[LLMRuleRunner] = None) -> None:        super().__init__(rule_library)
         super().__init__(rule_library)
-
-    async def run(
+        self.llm_rule_runner = llm_rule_runner    async def run(
         self,
         document_text: str,
         context: LintContext,
@@ -109,7 +108,18 @@ class GeneralStructureAgent(BaseAgent):
             # Aquí simplemente las ignoramos para no introducir ruido.
             if rule.check_type == CheckType.semantic:
                 continue
-
+        # 4) Reglas llm_semantic: usar LLMRuleRunner si está disponible
+        if rule.check_type == CheckType.llm_semantic:
+            if self.llm_rule_runner is not None:
+                llm_findings = await self.llm_rule_runner.run_llm_rule(
+                    rule=rule,
+                    document_text=document_text,
+                    context=context,
+                    profile=profile,
+                )
+                findings.extend(llm_findings)
+            # Si no hay llm_rule_runner, simplemente skippeamos sin error
+            continue
         return findings
 
     # ------------------------------------------------------------------

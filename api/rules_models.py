@@ -20,6 +20,7 @@ class CheckType(str, Enum):
     regex = "regex"
     structural = "structural"
     semantic = "semantic"
+        llm_semantic = "llm_semantic"
 
 
 class DetectionScope(str, Enum):
@@ -77,6 +78,47 @@ class RuleDetectionHints(BaseModel):
     notes: Optional[str] = Field(
         default=None,
         description="Notas adicionales para el desarrollador o el motor.",
+    )
+
+class LLMCheckMode(str, Enum):
+    """Modo de evaluación del LLM en una regla."""
+    validator = "validator"
+    classifier = "classifier"
+    suggester = "suggester"
+    generator = "generator"
+
+class LLMRuleConfig(BaseModel):
+    """Configuración de LLM para una regla con checkType='llm_semantic'."""
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+    
+    enabled: bool = Field(
+        default=True,
+        description="Habilita o deshabilita la evaluación LLM para esta regla."
+    )
+    mode: LLMCheckMode = Field(
+        default=LLMCheckMode.validator,
+        description="Modo de evaluación del LLM."
+    )
+    prompt_template_id: Optional[str] = Field(
+        default=None,
+        alias="promptTemplateId",
+        description="ID del template de prompt personalizado."
+    )
+    max_chars: int = Field(
+        default=4000,
+        description="Máximo número de caracteres del documento a enviar al LLM."
+    )
+    forbidden_behaviors: List[str] = Field(
+        default_factory=list,
+        description="Lista de comportamientos prohibidos que el LLM debe evitar."
+    )
+    allowed_suggestion_types: List[str] = Field(
+        default_factory=list,
+        description="Tipos de sugerencias permitidas del LLM."
+    )
+    output_format: str = Field(
+        default="JSON_FINDINGS_V1",
+        description="Formato esperado de la salida del LLM."
     )
 
 
@@ -157,6 +199,11 @@ class Rule(BaseModel):
         default=None,
         alias="autoFixHint",
         description="Sugerencia de corrección en lenguaje natural para el usuario.",
+    )
+    llm_config: Optional[LLMRuleConfig] = Field(
+        default=None,
+        alias="llmConfig",
+        description="Configuración LLM para reglas con checkType='llm_semantic'."
     )
 
 
