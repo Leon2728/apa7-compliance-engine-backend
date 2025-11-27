@@ -39,7 +39,10 @@ class GeneralStructureAgent(BaseAgent):
         context: LintContext,
         profile: DocumentProfile,
     ) -> List[Finding]:
-        rules: List[Rule] = self.rule_library.get_rules_for_agent(self.agent_id)
+        rules: List[Rule] = self.rule_library.get_rules_for_agent(
+                agent_id=self.agent_id,
+                profile_variant=context.profile_variant,
+            ))
                 is_international = context.profile_variant == "apa7_international"
         findings: List[Finding] = []
 
