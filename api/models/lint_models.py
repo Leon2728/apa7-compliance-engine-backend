@@ -31,8 +31,7 @@ class LintContext(BaseModel):
         description="Perfil de reglas a usar (ej: 'apa7_cun')",
     )
     layout: Optional[DocumentLayout] = None
-    profile_variant: Literal["cun_official", "apa7_international"] | None = "cun_official"
-        metadata: dict[str, Any] | None = None
+profile_variant: Literal["apa7_global", "apa7_institutional", "apa7_both"] | None = None        metadata: dict[str, Any] | None = None
 
 
 class DocumentProfile(BaseModel):
