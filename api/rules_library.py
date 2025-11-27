@@ -82,15 +82,40 @@ class RuleLibrary:
     # ------------------------------------------------------------------
     # API PÚBLICA PARA AGENTES / ORQUESTADOR
     # ------------------------------------------------------------------
-    def get_rules_for_agent(self, agent_id: str) -> List[Rule]:
+    def get_rules_for_agent(self, agent_id: str) -> List[Rule],
+        profile_variant: Optional[str] = None,
+    ) -> List[Rule]:
         """
         Devuelve la lista de reglas asociadas a un agente dado.
 
         :param agent_id: Identificador del agente (ej: "GENERALSTRUCTURE").
         :return: Lista de Rule; lista vacía si el agente no tiene reglas.
         """
-        rule_file = self._by_agent.get(agent_id)
-        return rule_file.rules if rule_file else []
+if not rule_file:
+            return []
+
+        rules = rule_file.rules
+
+        # Modo legacy: devolver todas las reglas si no se especifica profile_variant
+        if profile_variant is None:
+            return rules
+
+        # Normalizar la variante
+        variant = profile_variant.lower()
+
+        # Mapeo de profile_variant a RuleSource permitidos
+        if variant == "apa7_global":
+            allowed_sources = {RuleSource.APA7, RuleSource.MIXED}
+        elif variant == "apa7_institutional":
+            allowed_sources = {RuleSource.LOCAL, RuleSource.MIXED}
+        elif variant == "apa7_both":
+            allowed_sources = {RuleSource.APA7, RuleSource.LOCAL, RuleSource.MIXED}
+        else:
+            # Comportamiento seguro: modo legacy si viene valor inesperado
+            return rules
+
+        # Filtrar reglas por RuleSource
+        return [rule for rule in rules if rule.source in allowed_sources]
 
     def get_rule_by_id(self, rule_id: str) -> Optional[Rule]:
         """
