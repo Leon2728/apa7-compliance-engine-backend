@@ -6,7 +6,7 @@ from api.config import get_settings
 from api.services.coach_service import CoachService
 from api.llm.client import BaseLLMClient
 from api.models.coach import (
-    CoachRequest,
+    CoachRequestt,
     CoachResponse,
     CoachMode,
     CoachProfile,
@@ -33,7 +33,7 @@ def get_coach_service() -> CoachService:
 
 
 @router.post("", response_model=CoachResponse)
-async def coach_endpoint(request: CoachReques, service: CoachService = Depends(get_coach_service))) -> CoachResponse:
+async def coach_endpoint(request: CoachRequest, service: CoachService = Depends(get_coach_service))) -> CoachResponse:
     """
     Endpoint principal de coach academico.
 
@@ -130,7 +130,7 @@ GUIAS INSTITUCIONALES:
 # --------- Handlers por modo --------- #
 
 
-async def _handle_plan_section(request: CoachRequest) -> CoachResponse:
+async def _handle_plan_section(request: CoachRequestt) -> CoachResponse:
     ctx = request.context
     system_prompt = build_system_prompt(request.profile, ctx.paper_profile)
 
@@ -176,7 +176,7 @@ NO redactes la seccion completa lista para entregar.
     )
 
 
-async def _handle_review_section(request: CoachRequest) -> CoachResponse:
+async def _handle_review_section(request: CoachRequestt) -> CoachResponse:
     ctx = request.context
     text = request.student_text or ""
     system_prompt = build_system_prompt(request.profile, ctx.paper_profile)
@@ -235,7 +235,7 @@ NO devuelvas un texto alternativo completo listo para entregar.
     )
 
 
-async def _handle_clarify_instructions(request: CoachRequest) -> CoachResponse:
+async def _handle_clarify_instructions(request: CoachRequestt) -> CoachResponse:
     ctx = request.context
     system_prompt = build_system_prompt(request.profile, ctx.paper_profile)
 
