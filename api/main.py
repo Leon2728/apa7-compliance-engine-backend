@@ -10,6 +10,7 @@ from api.orchestrator.lint_orchestrator import LintOrchestrator
 from api.rules_library import RuleLibrary
 from api.routes import coach_router
 from api.routes import extract_text_router
+from api.routes import export_router
 
 app = FastAPI(
     title="APA7 Compliance Engine Backend",
@@ -30,6 +31,7 @@ orchestrator = LintOrchestrator(rule_library=rule_library)
 # Registrar routers adicionales
 app.include_router(coach_router.router)
 app.include_router(extract_text_router.router)
+app.include_router(export_router.export_router)
 
 
 @app.get("/health")
