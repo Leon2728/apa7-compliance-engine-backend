@@ -3,6 +3,7 @@ import os
 from typing import Optional
 
 from api.config import get_settings
+from api.security import api_key_auth
 from api.services.coach_service import CoachService
 from api.llm.client import BaseLLMClient
 from api.models.coach import (
@@ -15,7 +16,8 @@ from api.models.coach import (
     CoachContext,
 )
 
-router = APIRouter(prefix="/coach", tags=["coach"])
+router = APIRouter(prefix="/coach", tags=["coach"],
+    dependencies=[Depends(api_key_auth)])
 
 def get_coach_service() -> CoachService:
     """Get coach service with optional LLM client."""
