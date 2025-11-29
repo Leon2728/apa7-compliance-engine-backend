@@ -139,9 +139,14 @@ class LintRequest(BaseModel):
     Payload de entrada para POST /lint.
     """
 
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="forbid")
 
-    document_text: str = Field(..., description="Texto completo del documento")
+    document_text: str = Field(
+        ...,
+        min_length=10,
+        max_length=100_000,
+        description="Texto completo del documento a analizar (min 10, max 100,000 caracteres)",
+    )
     context: LintContext = Field(
         default_factory=LintContext, description="Contexto opcional de linting"
     )
