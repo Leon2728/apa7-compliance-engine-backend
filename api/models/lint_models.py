@@ -164,3 +164,45 @@ class LintResponse(BaseModel):
     elapsed_ms: float
     profile: DocumentProfile
     timestamp: datetime
+        critical_review: Optional[CriticalReviewSummary] = None
+
+
+# ============ Meta-Agent Models (MISIÓN 8) ============
+
+class IssuesByCategory(BaseModel):
+    """Conteo de issues por categoría y severidad."""
+    model_config = ConfigDict(extra="ignore")
+    category: str
+    error_count: int
+    warning_count: int
+    suggestion_count: int
+
+
+class TopIssue(BaseModel):
+    """Issue principal a ser priorizado."""
+    model_config = ConfigDict(extra="ignore")
+    issue_type: str  # p.ej. "structure", "citations", "math_equations"
+    severity: str  # "error" | "warning" | "suggestion"
+    message: str
+    count: int
+    suggested_action: str
+
+
+class PolicyComplianceSummary(BaseModel):
+    """Resumen de conformidad con políticas institucionales."""
+    model_config = ConfigDict(extra="ignore")
+    score: float  # 0-100
+    policy_type: str  # ej: "institutional_apa7_cun"
+    passed_policies: list[str]
+    failed_policies: list[str]
+    notes: Optional[str] = None
+
+
+class CriticalReviewSummary(BaseModel):
+    """Resumen ejecutivo de la revisión crítica del documento."""
+    model_config = ConfigDict(extra="ignore")
+    main_status: str  # "OK" | "NEEDS_IMPROVEMENT" | "CRITICAL"
+    issues_by_category: list[IssuesByCategory]
+    top_issues: list[TopIssue]
+    suggested_fix_order: list[str]
+    notes: Optional[str] = None
